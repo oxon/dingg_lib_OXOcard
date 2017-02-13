@@ -11,23 +11,6 @@
 /* Public ----------------------------------------------------- */
 OXOCard::OXOCard()
 {
-  // #ifdef DEBUG_OXOCARD
-  //   Serial.begin(DEBUG_BAUDRATE_OXOCARD);
-  //   delay(200);
-  // #endif
-
-  // initPins();
-  // disableUnusedCpuFunctions();
-  // setLEDRed(HIGH);
-
-  // matrix = new IS31FL3731(Wire, &P_EN_LED_DRIVER, EN_LED_DRIVER, 8, 8);
-
-  // matrix->begin();
-  // delay(200);
-  // matrix->clear();
-  // delay(200);
-  // matrix->drawRectangle(0, 0, 8, 8, 255);
-  // delay(2000);
 }
 
 OXOCard::~OXOCard()
@@ -49,8 +32,9 @@ void OXOCard::begin()
 
   matrix->begin();
   matrix->clear();
-  matrix->drawRectangle(0, 0, 8, 8, 255);
+  //matrix->drawRectangle(0, 0, 8, 8, 255);
 }
+
 
 /* Private ---------------------------------------------------- */
 /** ===========================================================

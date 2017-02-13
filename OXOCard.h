@@ -54,6 +54,9 @@ public:
   /* public methods */
   void begin();
 
+  /* public members */
+  IS31FL3731 *matrix;
+
 private:
   /* attributes */
   //...
@@ -62,7 +65,7 @@ private:
   //...
 
   /* private variables */
-  IS31FL3731 *matrix;
+
 
   /* private methods */
   void initPins();
