@@ -60,6 +60,77 @@ void OXOCard::initPins()
   PORTD = 0b00011100;
 }
 
+
+
+/** ===========================================================
+ * \fn      turnOff
+ * \brief   turns off the device by putting it in a power down
+ *          sleep-mode, it will wake up again if INTn occures
+ *
+ * \requ    <avr/interrupt.h> and <avr/sleep.h>
+ ============================================================== */
+void OXOCard::turnOff() {
+  /* disable periphery */
+  matrix->disableHW(); //Matrix.end();
+//  Accel.end();
+//  BLE.disable();  //BLE.end();
+  clearBit(P_PIEZO, PIEZO);
+  setLEDBlue(LOW);
+  setLEDRed(LOW);
+  delay(200);
+
+  /* all interrupts have to be disabled during turn off configurations */
+  cli();
+
+  /* define that a low-level of INTn generates an interrupt request */
+  clearBit(EICRA, ISC11); clearBit(EICRA, ISC10); // INT1
+  //clearBit(EICRA, ISC01); clearBit(EICRA, ISC00); // INT0
+
+  /* clear the interrupt flags */
+  //setBit(PCIFR, PCIF2);
+  setBit(EIFR, INTF1);
+  //setBit(EIFR, INTF0);
+
+  /* enable external interrupt INTn (to wake up later) */
+  //setBit(PCICR, PCIE2); // BUTTON 1
+  setBit(EIMSK, INT1);  // BUTTON 2
+  //setBit(EIMSK, INT0);  // BUTTON 3
+
+//  /* disable other interrupts */
+//  clearBit(TIMSK2, OCIE2A);
+
+  /* choose "Power-down" sleep mode */
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+
+  /* enable sleep-mode */
+  sleep_enable();
+
+  /* reenable interrupts */
+  sei();
+
+  /* system actually sleeps here */
+  sleep_cpu();
+
+  /* zzzZZZzzzZZZ... */
+
+  /* INTn occured (button click) -> wakes up! system continues here... */
+
+//  /* reenable other interrupts */
+//  setBit(TIMSK2, OCIE2A);
+
+  /* reenable periphery */
+  matrix->enableHW(); //Matrix.begin();
+  //Accel.begin();
+  //BLE.enable();  //BLE.begin();
+  clearBit(P_PIEZO, PIEZO);
+  setLEDBlue(LOW);
+  setLEDRed(LOW);
+  setLEDRed(HIGH);
+
+
+
+}
+
 /** ===========================================================
  * \fn      disableUnusedCpuFunctions
  * \brief   disables unused cpu-functions to reduce power

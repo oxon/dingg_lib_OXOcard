@@ -54,6 +54,8 @@ public:
   /* public methods */
   void begin();
 
+  void turnOff();
+
   /* public members */
   IS31FL3731 *matrix;
 

@@ -44,6 +44,12 @@ void clearDisplay() {
    globalOXOCard.matrix->fillScreen(0);
 }
 
+/* ------------------------------------- */
+void turnOff() {
+   globalOXOCard.turnOff();
+}
+
+
 
 /* ------------------------------------- */
 void turnDisplayOn() {
