@@ -25,16 +25,17 @@
 #define MOSI              3  // PB3
 #define P_MOSI            PORTB
 #define PIN_MOSI          PINB
-#define SS                2  // PB2
-#define P_SS              PORTB
-#define PIN_SS            PINB
-#define PIEZO             1  // PB1
-#define P_PIEZO           PORTB
-#define PIN_PIEZO         PINB
-#define NR_PIEZO          9
-#define RST_BLE           0  // PB0
-#define P_RST_BLE         PORTB
-#define PIN_RST_BLE       PINB
+#define INT               2  // PB2
+#define P_INT             PORTB
+#define PIN_INT           PINB
+#define SW_RXD            1  // PB1
+#define P_SW_RXD          PORTB
+#define PIN_SW_RXD        PINB
+#define PIN_NR_SW_RXD     9  // Arduino D9
+#define SW_TXD            0  // PB0
+#define P_SW_TXD          PORTB
+#define PIN_SW_TXD        PINB
+#define PIN_NR_SW_TXD     8  // Arduino D8
 
 #define SCL               5  // PC5
 #define P_SCL             PORTC
@@ -55,15 +56,16 @@
 #define P_LED_RED         PORTC
 #define PIN_LED_RED       PINC
 
-#define EN_BLE            7  // PD7
+#define PIEZO             7  // PD7
+#define P_PIEZO           PORTD
+#define PIN_PIEZO         PIND
+#define PIN_NR_PIEZO      7  // Arduino D7
+#define RST_BLE           6  // PD6
+#define P_RST_BLE         PORTD
+#define PIN_RST_BLE       PIND
+#define EN_BLE            5  // PD5
 #define P_EN_BLE          PORTD
 #define PIN_EN_BLE        PIND
-#define SW_TXD            6  // PD6
-#define P_SW_TXD          PORTD
-#define PIN_SW_TXD        PIND
-#define SW_RXD            5  // PD5
-#define P_SW_RXD          PORTD
-#define PIN_SW_RXD        PIND
 #define BUTTON1           4  // PD4
 #define P_BUTTON1         PORTD
 #define PIN_BUTTON1       PIND
@@ -99,6 +101,8 @@
 #define button1Pressed (!getBit(PIN_BUTTON1, BUTTON1))
 #define button2Pressed (!getBit(PIN_BUTTON2, BUTTON2))
 #define button3Pressed (!getBit(PIN_BUTTON3, BUTTON3))
+
+
 
 /* LED makros */
 #define setLEDRed(on)  (bool(on) ? clearBit(P_LED_RED, LED_RED) : setBit(P_LED_RED, LED_RED))       // low active!
