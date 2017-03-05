@@ -56,8 +56,9 @@ void OXOCard::initPins()
   /* Port D */
   //DDRD =  0b10000000; // !EN_BLE
   //PORTD = 0b10011100; // H
-  DDRD = 0;           //blup: DDRD have to be 0 or Serial doesn't work any more...
-  PORTD = 0b00011100;
+  setBit(P_EN_BLE, EN_BLE);
+  DDRD =  0b11100000; // PIEZO, !RST_BLE, !EN_BLE
+  PORTD = 0b00111101; // L    , L       , H
 }
 
 
