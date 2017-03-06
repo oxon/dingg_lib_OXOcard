@@ -46,16 +46,14 @@ void OXOCard::initPins()
   DebugOXOCard_println(F("initPins"));
 
   /* Port B */
-  DDRB =  0b00000011; // PIEZO, !RST_BLE
-  PORTB = 0b00111100; // L    , L
+  DDRB =  0b00000001; // SW-TXD (must be defined as output!)
+  PORTB = 0b00111000; // L
 
   /* Port C */
   DDRC =  0b00000111; // EN_LED_DRIVER, !BLUE,  !RED
   PORTC = 0b00000010; // L            , H    ,  L
 
   /* Port D */
-  //DDRD =  0b10000000; // !EN_BLE
-  //PORTD = 0b10011100; // H
   setBit(P_EN_BLE, EN_BLE);
   DDRD =  0b11100000; // PIEZO, !RST_BLE, !EN_BLE
   PORTD = 0b00111101; // L    , L       , H

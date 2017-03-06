@@ -20,7 +20,7 @@
 #include "OXOCard.h"
 
 /* Defines -----------------------------------------------------*/
-#define DEBUG_OXOCARD_RUNNER  //blup: define to activate Debug prints
+//#define DEBUG_OXOCARD_RUNNER  //blup: define to activate Debug prints
 
 /* Macros ----------------------------------------------------- */
 #ifdef DEBUG_OXOCARD_RUNNER
