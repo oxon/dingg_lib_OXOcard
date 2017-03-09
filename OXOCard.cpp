@@ -46,7 +46,7 @@ void OXOCard::initPins()
   DebugOXOCard_println(F("initPins"));
 
   /* Port B */
-  DDRB =  0b00000001; // SW-TXD (must be defined as output!)
+  DDRB =  0b00000010; // SW-TXD (must be defined as output!)
   PORTB = 0b00111000; // L
 
   /* Port C */

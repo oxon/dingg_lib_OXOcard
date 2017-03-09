@@ -28,14 +28,14 @@
 #define INT               2  // PB2
 #define P_INT             PORTB
 #define PIN_INT           PINB
-#define SW_RXD            1  // PB1
-#define P_SW_RXD          PORTB
-#define PIN_SW_RXD        PINB
-#define PIN_NR_SW_RXD     9  // Arduino D9
-#define SW_TXD            0  // PB0
+#define SW_TXD            1  // PB1
 #define P_SW_TXD          PORTB
 #define PIN_SW_TXD        PINB
-#define PIN_NR_SW_TXD     8  // Arduino D8
+#define PIN_NR_SW_TXD     9  // Arduino D9
+#define SW_RXD            0  // PB0
+#define P_SW_RXD          PORTB
+#define PIN_SW_RXD        PINB
+#define PIN_NR_SW_RXD     8  // Arduino D8
 
 #define SCL               5  // PC5
 #define P_SCL             PORTC
