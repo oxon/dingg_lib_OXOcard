@@ -161,7 +161,25 @@ inline bool isRightButtonPressed() {
   return button3Pressed;
 }
 
+/* ------------------------------------- */
+void drawChar(byte x, byte y, char c, byte brightness=255) {
+  globalOXOCard.matrix->drawChar(x, y,  c, brightness);
+}
 
+void drawDigit(byte x, byte y, byte digit, byte brightness=255) {
+  drawChar(x,y,48 + (digit%10), brightness);
+}
+
+void drawNumber(byte number, byte brightness=255) {
+  if (number >99) {
+    drawChar(0,0,'?');
+    drawChar(5,0,'?');
+    return;
+  };
+
+  drawChar(0,0,48 + (number/10));
+  drawChar(5,0,48 + (number%10));
+}
 
 #endif
 
