@@ -1,11 +1,11 @@
 /**-----------------------------------------------------------------------------
  * \file    OXOCard.h
  * \author  jh, tg
- * \date    xx.02.2017
+ * \date    xx.03.2017
  *
  * \version 1.0
  *
- * \brief   The OXOCard is a ...
+ * \brief   The OXOCard is a board for kids to learn programming with Arduino
  *
  * @{
  -----------------------------------------------------------------------------*/
@@ -18,15 +18,22 @@
 #include <Arduino.h>
 #include <avr/sleep.h>
 #include <Wire.h>
-#include <MMA7660FC.h>
 #include <SoftwareSerial.h>
+#include <MMA7660FC.h>
 #include <IS31FL3731.h>
 #include <BLE_HM11.h>
 #include "globals.h"
 
 /* Defines -----------------------------------------------------*/
-#define DEBUG_OXOCARD  //blup: define to activate Debug prints
-#define DEBUG_BAUDRATE_OXOCARD  115200
+#define DEBUG_OXOCARD  // define to activate Debug prints
+#define DEBUG_BAUDRATE_OXOCARD    115200
+
+#define DEFAULT_AUTO_TURN_OFF     120          // in seconds
+
+#define BAUDRATE_BLE              9600//19200  // in baud
+#define BLE_NAME                  "OXOCard"
+#define BLE_UUID                  "9123456789123456"
+#define BLE_MARJOR                20
 
 /* Macros ----------------------------------------------------- */
 #ifdef DEBUG_OXOCARD
@@ -53,11 +60,15 @@ public:
 
   /* public methods */
   void begin();
-
   void turnOff();
+  void setupAsIBeacon(uint16_t beacon_nr, BLE_HM11::advertInterval_t interv = BLE_HM11::INTERV_550MS);
+  int16_t findIBeacon(uint16_t beacon_nr);
 
   /* public members */
+  MMA7660FC *accel;
   IS31FL3731 *matrix;
+  SoftwareSerial *bleSerial;
+  BLE_HM11 *ble;
 
 private:
   /* attributes */
@@ -72,6 +83,8 @@ private:
   /* private methods */
   void initPins();
   void disableUnusedCpuFunctions();
+  void initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor);
+  inline bool getLEDBlue();
 
 };
 

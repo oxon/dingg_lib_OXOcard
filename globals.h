@@ -102,8 +102,6 @@
 #define button2Pressed (!getBit(PIN_BUTTON2, BUTTON2))
 #define button3Pressed (!getBit(PIN_BUTTON3, BUTTON3))
 
-
-
 /* LED makros */
 #define setLEDRed(on)  (bool(on) ? clearBit(P_LED_RED, LED_RED) : setBit(P_LED_RED, LED_RED))       // low active!
 #define setLEDBlue(on) (bool(on) ? clearBit(P_LED_BLUE, LED_BLUE) : setBit(P_LED_BLUE, LED_BLUE))   // low active!
