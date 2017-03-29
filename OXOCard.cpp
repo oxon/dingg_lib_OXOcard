@@ -31,6 +31,7 @@ void OXOCard::begin()
 {
   #ifdef DEBUG_OXOCARD
     Serial.begin(DEBUG_BAUDRATE_OXOCARD);
+    DebugOXOCard_println("");
   #endif
 
   initPins();
@@ -39,18 +40,22 @@ void OXOCard::begin()
   initTimerIRQ(1, 1024, 39062);   // interrupt every ~5 Seconds
 
   /* init LED matrix */
+  DebugOXOCard_println(F("init LED matrix"));
   matrix = new IS31FL3731(Wire, &P_EN_LED_DRIVER, EN_LED_DRIVER, 8, 8);
   matrix->begin();
   matrix->clear();
   //matrix->drawRectangle(0, 0, 8, 8, 255);
 
   /* init accelerometer */
+  DebugOXOCard_println(F("init accelerometer"));
   accel = new MMA7660FC(Wire);
   accel->begin();
 
   /* init BLE */
+  DebugOXOCard_println(F("init BLE"));
   bleSerial = new SoftwareSerial(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
   ble = new BLE_HM11(*bleSerial, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
+  delay(5);  // wait some time to charge the 22uF capacitor
   ble->begin(BAUDRATE_BLE);
 }
 
@@ -187,9 +192,6 @@ int16_t OXOCard::findIBeacon(uint16_t beacon_nr)
 
   return txPower;
 }
-
-/* Accelerometer methods */
-
 
 /* Private ---------------------------------------------------- */
 /** ===========================================================

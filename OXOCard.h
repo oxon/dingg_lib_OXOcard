@@ -61,6 +61,7 @@ public:
   /* public methods */
   void begin();
   void turnOff();
+
   void setupAsIBeacon(uint16_t beacon_nr, BLE_HM11::advertInterval_t interv = BLE_HM11::INTERV_550MS);
   int16_t findIBeacon(uint16_t beacon_nr);
 

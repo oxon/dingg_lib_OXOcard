@@ -197,7 +197,39 @@ void drawNumber(byte number, byte brightness=255) {
 }
 
 /* Accelerometer functions ------------------------------------ */
+float getXAcceleration() {
+  float vector[3];
+  globalOXOCard.accel->getAccelerationVector(vector);
+  return vector[0];
+}
 
+/* ------------------------------------- */
+float getYAcceleration() {
+  float vector[3];
+  globalOXOCard.accel->getAccelerationVector(vector);
+  return vector[1];
+}
+
+/* ------------------------------------- */
+float getZAcceleration() {
+  float vector[3];
+  globalOXOCard.accel->getAccelerationVector(vector);
+  return vector[2];
+}
+
+/* ------------------------------------- */
+String getOrientation() {
+  String orientation;
+  switch(byte(globalOXOCard.accel->getOrientation()))
+  {
+    case 1:  orientation = "UP";           break;
+    case 2:  orientation = "DOWN";         break;
+    case 3:  orientation = "HORIZONTALLY"; break;
+    case 4:  orientation = "VERTICALLY";   break;
+    default: orientation = "UNKNOWN";      break;
+  };
+  return orientation;
+}
 
 /* BLE functions ---------------------------------------------- */
 void setupAsIBeacon(uint16_t beacon_nr) {    // 1... 65'534 (0xFFFE)
@@ -205,7 +237,7 @@ void setupAsIBeacon(uint16_t beacon_nr) {    // 1... 65'534 (0xFFFE)
 }
 
 /* ------------------------------------- */
-int16_t findIBeacon(uint16_t beacon_nr) {
+int findIBeacon(uint16_t beacon_nr) {
   return globalOXOCard.findIBeacon(beacon_nr);
 }
 
