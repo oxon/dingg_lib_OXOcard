@@ -24,6 +24,8 @@ uint16_t autoTurnOffAfter = -1;
 volatile uint16_t autoTurnOffCnt = 0;
 volatile bool goingToTurnOff = false;
 
+enum orientation : byte {UNKNOWN = 0, UP = 1, DOWN = 2, HORIZONTALLY = 3, VERTICALLY = 4};
+
 /* Object instantiations -------------------------------------- */
 OXOCard globalOXOCard;
 
@@ -50,7 +52,7 @@ void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF)  // should to b
   if (goingToTurnOff)
   {
     goingToTurnOff = false;
-    turnOff();
+    globalOXOCard.turnOff();
   }
 }
 
@@ -226,30 +228,30 @@ byte getOrientation() {
 //   String orientation;
 //   switch(byte(globalOXOCard.accel->getOrientation()))
 //   {
-//     case 1:  orientation = "UP";           break;
-//     case 2:  orientation = "DOWN";         break;
-//     case 3:  orientation = "HORIZONTALLY"; break;
-//     case 4:  orientation = "VERTICALLY";   break;
-//     default: orientation = "UNKNOWN";      break;
+//     case UP:           orientation = "UP";           break;
+//     case DOWN:         orientation = "DOWN";         break;
+//     case HORIZONTALLY: orientation = "HORIZONTALLY"; break;
+//     case VERTICALLY:   orientation = "VERTICALLY";   break;
+//     default:           orientation = "UNKNOWN";      break;
 //   };
 //   return orientation;
 // }
 
 /* ------------------------------------- */
 bool isOrientationUp() {
-  return byte(globalOXOCard.accel->getOrientation()) == 1;
+  return byte(globalOXOCard.accel->getOrientation()) == UP;
 }
 
 bool isOrientationDown() {
-  return byte(globalOXOCard.accel->getOrientation()) == 2;
+  return byte(globalOXOCard.accel->getOrientation()) == DOWN;
 }
 
 bool isOrientationHorizontally() {
-  return byte(globalOXOCard.accel->getOrientation()) == 3;
+  return byte(globalOXOCard.accel->getOrientation()) == HORIZONTALLY;
 }
 
 bool isOrientationVertically() {
-  return byte(globalOXOCard.accel->getOrientation()) == 4;
+  return byte(globalOXOCard.accel->getOrientation()) == VERTICALLY;
 }
 
 /* BLE functions ---------------------------------------------- */
