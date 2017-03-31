@@ -1,30 +1,64 @@
-#TODO:
-########################################
-## Syntax Coloring Map EPD_FLASH
-########################################
+##################################################
+# Arduino Syntax Coloring Map
 #
-########################################
-## Datatypes (KEYWORD1)
-########################################
-#
-#EPD_FLASH	KEYWORD1
-#
-########################################
-## Methods and Functions (KEYWORD2)
-########################################
-#begin	KEYWORD2
-#end	KEYWORD2
-#available	KEYWORD2
-#info	KEYWORD2
-#read	KEYWORD2
-#is_busy	KEYWORD2
-#write_enable	KEYWORD2
-#write_disable	KEYWORD2
-#write	KEYWORD2
-#sector_erase	KEYWORD2
-#
-#
-########################################
-## Constants (LITERAL1)
-########################################
-##EPD_FLASH_	LITERAL1
+# Note: Use Tabs instead of Spaces!
+# Recommended Tab Size = 8
+##################################################
+#-------------------------------------------------
+# KEYWORD1: Classes, datatypes and C++ keywords
+#-------------------------------------------------
+OXOCard				KEYWORD1
+
+#-------------------------------------------------
+# KEYWORD2: Methods and Functions
+#-------------------------------------------------
+#OXOCard:
+begin				KEYWORD2
+turnOff				KEYWORD2
+setupAsIBeacon			KEYWORD2
+findIBeacon			KEYWORD2
+initPins			KEYWORD2
+disableUnusedCpuFunctions	KEYWORD2
+initTimerIRQ			KEYWORD2
+getLEDBlue			KEYWORD2
+
+#OXOCardRunner:
+turnOff				KEYWORD2
+handleAutoTurnOff		KEYWORD2
+isLeftButtonPressed		KEYWORD2
+isMiddleButtonPressed		KEYWORD2
+isRightButtonPressed		KEYWORD2
+clearDisplay			KEYWORD2
+turnDisplayOn			KEYWORD2
+fillDisplay			KEYWORD2
+drawPixel			KEYWORD2
+drawRectangle			KEYWORD2
+drawFilledRectangle		KEYWORD2
+drawLine			KEYWORD2
+drawCircle			KEYWORD2
+drawTriangle			KEYWORD2
+drawFilledTriangle		KEYWORD2
+drawImage			KEYWORD2
+drawChar			KEYWORD2
+drawDigit			KEYWORD2
+drawNumber			KEYWORD2
+getOrientation			KEYWORD2
+isOrientationUp			KEYWORD2
+isOrientationDown		KEYWORD2
+isOrientationHorizontally	KEYWORD2
+isOrientationVertically		KEYWORD2
+setupAsIBeacon			KEYWORD2
+findIBeacon			KEYWORD2
+
+#-------------------------------------------------
+# KEYWORD3: setup, loop and Serial keywords
+#-------------------------------------------------
+
+
+#-------------------------------------------------
+# LITERAL1: Constants
+#-------------------------------------------------
+
+#-------------------------------------------------
+# LITERAL2: Built-in variables (unused by default)
+#-------------------------------------------------
