@@ -262,6 +262,19 @@ int findIBeacon(uint16_t beacon_nr) {
   return globalOXOCard.findIBeacon(beacon_nr);
 }
 
+/* Tone functions --------------------------------------------- */
+void tone(unsigned int frequency) {
+  tone(PIN_NR_PIEZO, frequency, 0);
+}
+
+void tone(int frequency, int duration) {
+  tone(PIN_NR_PIEZO, (unsigned int)(frequency), (unsigned long)(duration));
+}
+
+void noTone() {
+  noTone(PIN_NR_PIEZO);
+}
+
 /* Interrupts ------------------------------------------------- */
 /** ===========================================================
  * \fn      ISR (timer1 OCIE1A interrupt TIMER1_COMPA)
