@@ -218,17 +218,38 @@ float getZAcceleration() {
 }
 
 /* ------------------------------------- */
-String getOrientation() {
-  String orientation;
-  switch(byte(globalOXOCard.accel->getOrientation()))
-  {
-    case 1:  orientation = "UP";           break;
-    case 2:  orientation = "DOWN";         break;
-    case 3:  orientation = "HORIZONTALLY"; break;
-    case 4:  orientation = "VERTICALLY";   break;
-    default: orientation = "UNKNOWN";      break;
-  };
-  return orientation;
+byte getOrientation() {
+  return byte(globalOXOCard.accel->getOrientation());    // 1 = UP, 2 = DOWN, 3 = HORIZONTALLY, 4 = VERTICALLY
+}
+
+// String getOrientation() {
+//   String orientation;
+//   switch(byte(globalOXOCard.accel->getOrientation()))
+//   {
+//     case 1:  orientation = "UP";           break;
+//     case 2:  orientation = "DOWN";         break;
+//     case 3:  orientation = "HORIZONTALLY"; break;
+//     case 4:  orientation = "VERTICALLY";   break;
+//     default: orientation = "UNKNOWN";      break;
+//   };
+//   return orientation;
+// }
+
+/* ------------------------------------- */
+bool isOrientationUp() {
+  return byte(globalOXOCard.accel->getOrientation()) == 1;
+}
+
+bool isOrientationDown() {
+  return byte(globalOXOCard.accel->getOrientation()) == 2;
+}
+
+bool isOrientationHorizontally() {
+  return byte(globalOXOCard.accel->getOrientation()) == 3;
+}
+
+bool isOrientationVertically() {
+  return byte(globalOXOCard.accel->getOrientation()) == 4;
 }
 
 /* BLE functions ---------------------------------------------- */
