@@ -40,7 +40,7 @@ void turnOff() {
 }
 
 /* ------------------------------------- */
-void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF)  // should to be a multiple of 5
+void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF)
 {
   if (seconds < autoTurnOffAfter)
   {
@@ -290,7 +290,7 @@ void noTone() {
 ISR (TIMER1_COMPA_vect)
 {
   autoTurnOffCnt++;
-  if (autoTurnOffCnt >= autoTurnOffAfter/5)  // since the interrupt fires every ~5 seconds
+  if (autoTurnOffCnt >= autoTurnOffAfter)
   {
     autoTurnOffCnt = 0;
     goingToTurnOff = true;

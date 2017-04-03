@@ -37,7 +37,7 @@ void OXOCard::begin()
   initPins();
   disableUnusedCpuFunctions();
 
-  initTimerIRQ(1, 1024, 39062);   // interrupt every ~5 Seconds
+  initTimerIRQ(1, 1024, 7812);   // interrupt every 1 Second
 
   /* init LED matrix */
   DebugOXOCard_println(F("init LED matrix"));
