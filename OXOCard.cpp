@@ -54,7 +54,7 @@ void OXOCard::begin()
   /* init BLE */
   DebugOXOCard_println(F("init BLE"));
   bleSerial = new SoftwareSerial(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
-  ble = new BLE_HM11(*bleSerial, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
+  ble = new BLE_HM11(*bleSerial, PIN_NR_SW_RXD, PIN_NR_SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
   delay(5);  // wait some time to charge the 22uF capacitor
   ble->begin(BAUDRATE_BLE);
 }
@@ -79,7 +79,14 @@ void OXOCard::turnOff() {
   clearBit(P_PIEZO, PIEZO);
   setLEDBlue(LOW);
   setLEDRed(LOW);
-  delay(200);
+
+  /* disable HW-Serial */
+  Serial.flush();
+  uint8_t ucsrb = UCSR0B;
+  UCSR0B = 0;
+  clearBit(P_RXD, RXD);  // necessary!
+
+  delay(100);
 
   /* all interrupts have to be disabled during turn off configurations */
   cli();
@@ -119,6 +126,10 @@ void OXOCard::turnOff() {
 
 //  /* reenable other interrupts */
 //  setBit(TIMSK2, OCIE2A);
+
+  /* reenable HW-Serial */
+  UCSR0B = ucsrb;
+  setBit(P_RXD, RXD);
 
   /* reenable periphery */
   setLEDRed(HIGH);
