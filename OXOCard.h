@@ -23,6 +23,7 @@
 #include <IS31FL3731.h>
 #include <BLE_HM11.h>
 #include "globals.h"
+#include "pitches.h"
 
 /* Defines -----------------------------------------------------*/
 #define DEBUG_OXOCARD  // define to activate Debug prints

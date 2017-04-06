@@ -277,6 +277,17 @@ void noTone() {
   noTone(PIN_NR_PIEZO);
 }
 
+void playMelody(int tones[], int lengths[], int size, int pause = 100) {
+  for (int i = 0;i<size;i++) {
+    tone(tones[i],lengths);
+    delay(lengths[i]);
+    noTone();
+    delay(pause);
+  }
+
+
+}
+
 /* Interrupts ------------------------------------------------- */
 /** ===========================================================
  * \fn      ISR (timer1 OCIE1A interrupt TIMER1_COMPA)
