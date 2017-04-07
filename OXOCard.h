@@ -21,7 +21,7 @@
 #include <SoftwareSerial.h>
 #include <MMA7660FC.h>
 #include <IS31FL3731.h>
-#include <BLE_HM11.h>
+#include <HM11_SoftwareSerial.h>
 #include "globals.h"
 
 /* Defines -----------------------------------------------------*/
@@ -62,14 +62,14 @@ public:
   void begin();
   void turnOff();
 
-  void setupAsIBeacon(uint16_t beacon_nr, BLE_HM11::advertInterval_t interv = BLE_HM11::INTERV_550MS);
+  void setupAsIBeacon(uint16_t beacon_nr, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
   int16_t findIBeacon(uint16_t beacon_nr);
 
   /* public members */
   MMA7660FC *accel;
   IS31FL3731 *matrix;
   SoftwareSerial *bleSerial;
-  BLE_HM11 *ble;
+  HM11_SoftwareSerial *ble;
 
 private:
   /* attributes */

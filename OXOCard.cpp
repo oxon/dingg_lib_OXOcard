@@ -54,7 +54,7 @@ void OXOCard::begin()
   /* init BLE */
   DebugOXOCard_println(F("init BLE"));
   bleSerial = new SoftwareSerial(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
-  ble = new BLE_HM11(*bleSerial, PIN_NR_SW_RXD, PIN_NR_SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
+  ble = new HM11_SoftwareSerial(*bleSerial, &P_SW_RXD, SW_RXD, &P_SW_TXD, SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
   delay(5);  // wait some time to charge the 22uF capacitor
   ble->begin(BAUDRATE_BLE);
 }
@@ -148,9 +148,9 @@ void OXOCard::turnOff() {
  *          (struct) advertInterval
  * \return  -
  ============================================================== */
-void OXOCard::setupAsIBeacon(uint16_t beacon_nr, BLE_HM11::advertInterval_t interv)
+void OXOCard::setupAsIBeacon(uint16_t beacon_nr, HM11_SoftwareSerial::advertInterval_t interv)
 {
-  BLE_HM11::iBeaconData_t iBeacon;
+  HM11_SoftwareSerial::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
   iBeacon.uuid = BLE_UUID;
   iBeacon.marjor = BLE_MARJOR;
@@ -172,7 +172,7 @@ int16_t OXOCard::findIBeacon(uint16_t beacon_nr)
   static bool firstTime = true;
   int16_t txPower = 0;
 
-  static BLE_HM11::iBeaconData_t iBeacon;
+  static HM11_SoftwareSerial::iBeaconData_t iBeacon;
   iBeacon.minor = beacon_nr;      // minor you wish to search for
 
   if (firstTime)
