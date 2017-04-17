@@ -24,6 +24,7 @@ uint16_t autoTurnOffAfter = -1;
 volatile uint16_t autoTurnOffCnt = 0;
 volatile bool goingToTurnOff = false;
 volatile bool serialOn = false;
+volatile int secondsSinceLastReset = 0;
 
 enum orientation : byte {UNKNOWN = 0, UP = 1, DOWN = 2, HORIZONTALLY = 3, VERTICALLY = 4};
 
@@ -284,9 +285,17 @@ void playMelody(int tones[], int lengths[], int size, int pause = 100) {
   }
 }
 
+void resetTimer() {
+  secondsSinceLastReset = millis();
+}
+
+int getTimerSeconds() {
+  return (millis() - secondsSinceLastReset) / 1000;
+}
+
 void checkIfSerialOn() {
   if (!serialOn) {
-    Serial.begin(9600);
+    Serial.begin(DEBUG_BAUDRATE_OXOCARD);
     serialOn = true;
   }
 }

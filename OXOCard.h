@@ -26,7 +26,7 @@
 #include "pitches.h"
 
 /* Defines -----------------------------------------------------*/
-#define DEBUG_OXOCARD  // define to activate Debug prints
+//--define DEBUG_OXOCARD  // define to activate Debug prints
 #define DEBUG_BAUDRATE_OXOCARD    115200
 
 #define DEFAULT_AUTO_TURN_OFF     120          // in seconds
