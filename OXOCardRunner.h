@@ -255,16 +255,20 @@ bool isOrientationVertically() {
 }
 
 /* BLE functions ---------------------------------------------- */
-void setupAsIBeacon(String beacon_name) {    // max. 20 characters
-  globalOXOCard.setupAsIBeacon(beacon_name);
+void setupAsIBeacon(String beaconName) {    // max. 20 characters
+  globalOXOCard.setupAsIBeacon(beaconName);
 }
-void setupAsIBeacon(uint16_t beacon_nr) {    // 1... 65'534 (0xFFFE)
-  globalOXOCard.setupAsIBeacon(beacon_nr);
+void setupAsIBeacon(uint16_t beaconNr) {    // 1... 65'534 (0xFFFE)
+  globalOXOCard.setupAsIBeacon(beaconNr);
 }
 
 /* ------------------------------------- */
-int findIBeacon(uint16_t beacon_nr) {
-  return globalOXOCard.findIBeacon(beacon_nr);
+int findIBeacon(String beaconName) {
+  return globalOXOCard.findIBeacon(beaconName);
+}
+
+int findIBeacon(uint16_t beaconNr) {
+  return globalOXOCard.findIBeacon(beaconNr);
 }
 
 /* Tone functions --------------------------------------------- */
@@ -287,8 +291,6 @@ void playMelody(int tones[], int lengths[], int size, int pause = 100) {
     noTone();
     delay(pause);
   }
-
-
 }
 
 /* Interrupts ------------------------------------------------- */
@@ -312,7 +314,3 @@ ISR (TIMER1_COMPA_vect)
 }
 
 #endif
-
-/**
- * @}
- */

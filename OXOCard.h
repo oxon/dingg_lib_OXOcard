@@ -63,10 +63,10 @@ public:
   void begin();
   void turnOff();
 
-  void setupAsIBeacon(String beacon_name, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
-  void setupAsIBeacon(uint16_t beacon_nr, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
-  int16_t findIBeacon(String beacon_name);
-  int16_t findIBeacon(uint16_t beacon_nr);
+  void setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
+  void setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
+  int16_t findIBeacon(String beaconName);
+  int16_t findIBeacon(uint16_t beaconNr);
 
   /* public members */
   MMA7660FC *accel;
@@ -89,11 +89,8 @@ private:
   void disableUnusedCpuFunctions();
   void initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor);
   inline bool getLEDBlue();
+  void iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial::iBeaconData_t *iBeacon);
 
 };
 
 #endif
-
-/**
- * @}
- */
