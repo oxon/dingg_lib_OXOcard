@@ -29,12 +29,12 @@
 #define DEBUG_OXOCARD  // define to activate Debug prints
 #define DEBUG_BAUDRATE_OXOCARD    115200
 
-#define DEFAULT_AUTO_TURN_OFF     120          // in seconds
+#define DEFAULT_AUTO_TURN_OFF     120           // in seconds
 
-#define BAUDRATE_BLE              9600//19200  // in baud
+#define BAUDRATE_BLE              9600//19200   // in baud
 #define BLE_NAME                  "OXOCard"
-#define BLE_UUID                  "9123456789123456"
-#define BLE_MARJOR                20
+#define BLE_DEFAULT_UUID          "4F584F43617264111111111111111111"  // "OXOCard"
+#define BLE_DEFAULT_MARJOR        4
 
 /* Macros ----------------------------------------------------- */
 #ifdef DEBUG_OXOCARD
@@ -63,7 +63,9 @@ public:
   void begin();
   void turnOff();
 
+  void setupAsIBeacon(String beacon_name, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
   void setupAsIBeacon(uint16_t beacon_nr, HM11_SoftwareSerial::advertInterval_t interv = HM11_SoftwareSerial::INTERV_550MS);
+  int16_t findIBeacon(String beacon_name);
   int16_t findIBeacon(uint16_t beacon_nr);
 
   /* public members */

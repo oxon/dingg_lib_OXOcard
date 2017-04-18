@@ -144,6 +144,50 @@ void OXOCard::turnOff() {
  * \fn      setupAsIBeacon
  * \brief   setup the BLE module of the OXOCard as iBeacon
  *
+ * \param   (str)    iBeacon name (max. 20 characters)
+ *          (struct) advertInterval
+ * \return  -
+ ============================================================== */
+void OXOCard::setupAsIBeacon(String beacon_name, HM11_SoftwareSerial::advertInterval_t interv)
+{
+  if (beacon_name.length() > 20)
+  {
+    DebugOXOCard_println("iBeacon name is too long! (max. 20 characters)");
+    beacon_name = beacon_name.substring(0, 20);
+  }
+
+  /* convert to hex string (char array) */
+  char hexString[20*2];
+  for (uint8_t i = 0; i < 20*2; i++) hexString[i] = '1';  // init with '1' since the HM-11 doesn't allow '0'
+  //DebugOXOCard_print("String(hexString) = "); DebugOXOCard_println(String(hexString));
+  for (uint8_t i = 0; i < beacon_name.length(); i++)
+  {
+    String tempStr = ble->byteToHexString(uint8_t(beacon_name[i]));
+    hexString[i*2]   = tempStr[0];
+    hexString[i*2+1] = tempStr[1];
+  }
+  //DebugOXOCard_print("String(hexString) = "); DebugOXOCard_println(String(hexString));
+
+  HM11_SoftwareSerial::iBeaconData_t iBeacon;
+  iBeacon.name = BLE_NAME;
+  iBeacon.uuid = "";
+  for (uint8_t i = 0;    i < 16*2; i++) iBeacon.uuid   += hexString[i];
+  //DebugOXOCard_print("iBeacon.uuid = "); DebugOXOCard_println(iBeacon.uuid);
+  iBeacon.marjor = 0;
+  for (uint8_t i = 16*2; i < 18*2; i++) iBeacon.marjor += uint8_t(hexString[i] - '0');
+  //DebugOXOCard_print("iBeacon.marjor = "); DebugOXOCard_println(iBeacon.marjor);
+  iBeacon.minor = 0;
+  for (uint8_t i = 18*2; i < 20*2; i++) iBeacon.minor  += uint8_t(hexString[i] - '0');
+  //DebugOXOCard_print("iBeacon.minor = "); DebugOXOCard_println(iBeacon.minor);
+  iBeacon.interv = interv;
+  ble->setupAsIBeacon(&iBeacon);
+  setLEDBlue(HIGH);
+}
+
+/** ===========================================================
+ * \fn      setupAsIBeacon
+ * \brief   setup the BLE module of the OXOCard as iBeacon
+ *
  * \param   (uint)   beacon number (1... 65534)
  *          (struct) advertInterval
  * \return  -
@@ -152,12 +196,56 @@ void OXOCard::setupAsIBeacon(uint16_t beacon_nr, HM11_SoftwareSerial::advertInte
 {
   HM11_SoftwareSerial::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
-  iBeacon.uuid = BLE_UUID;
-  iBeacon.marjor = BLE_MARJOR;
+  iBeacon.uuid = BLE_DEFAULT_UUID;
+  iBeacon.marjor = BLE_DEFAULT_MARJOR;
   iBeacon.minor = beacon_nr;
   iBeacon.interv = interv;
   ble->setupAsIBeacon(&iBeacon);
   setLEDBlue(HIGH);
+}
+
+/** ===========================================================
+ * \fn      findIBeacon
+ * \brief   find near iBeacon with given number
+ *
+ * \param   (str)    beacon name (max. 20 characters)
+ * \return  (int)  txPower
+ ============================================================== */
+int16_t OXOCard::findIBeacon(String beacon_name)
+{
+  static bool firstTime = true;
+  int16_t txPower = 0;
+
+  static HM11_SoftwareSerial::iBeaconData_t iBeacon;
+  iBeacon.minor = beacon_nr;              // minor you wish to search for
+
+  if (firstTime)
+  {
+    iBeacon.uuid = BLE_DEFAULT_UUID;      // UUID you wish to search for
+    iBeacon.marjor = BLE_DEFAULT_MARJOR;  // marjor you wish to search for
+    ble->setupAsIBeaconDetector();
+    firstTime = false;
+  }
+
+  DebugOXOCard_println("detectIBeacon...");
+  if (ble->detectIBeacon(&iBeacon))
+  {
+    setLEDBlue(HIGH);
+    DebugOXOCard_print(F("iBeacon.accessAddress = ")); DebugOXOCard_println(iBeacon.accessAddress);
+    DebugOXOCard_print(F("iBeacon.deviceAddress = ")); DebugOXOCard_println(iBeacon.deviceAddress);
+    DebugOXOCard_print(F("iBeacon.marjor = ")); DebugOXOCard_println(iBeacon.marjor);
+    DebugOXOCard_print(F("iBeacon.minor = ")); DebugOXOCard_println(iBeacon.minor);
+    DebugOXOCard_print(F("iBeacon.txPower = ")); DebugOXOCard_println(iBeacon.txPower);
+    txPower = iBeacon.txPower;
+  }
+  else
+  {
+    DebugOXOCard_println(F("I-Beacon not found"));
+    setLEDBlue(LOW);
+  }
+  DebugOXOCard_println();
+
+  return txPower;
 }
 
 /** ===========================================================
@@ -173,12 +261,12 @@ int16_t OXOCard::findIBeacon(uint16_t beacon_nr)
   int16_t txPower = 0;
 
   static HM11_SoftwareSerial::iBeaconData_t iBeacon;
-  iBeacon.minor = beacon_nr;      // minor you wish to search for
+  iBeacon.minor = beacon_nr;              // minor you wish to search for
 
   if (firstTime)
   {
-    iBeacon.uuid = BLE_UUID;      // UUID you wish to search for
-    iBeacon.marjor = BLE_MARJOR;  // marjor you wish to search for
+    iBeacon.uuid = BLE_DEFAULT_UUID;      // UUID you wish to search for
+    iBeacon.marjor = BLE_DEFAULT_MARJOR;  // marjor you wish to search for
     ble->setupAsIBeaconDetector();
     firstTime = false;
   }

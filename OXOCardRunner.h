@@ -255,6 +255,9 @@ bool isOrientationVertically() {
 }
 
 /* BLE functions ---------------------------------------------- */
+void setupAsIBeacon(String beacon_name) {    // max. 20 characters
+  globalOXOCard.setupAsIBeacon(beacon_name);
+}
 void setupAsIBeacon(uint16_t beacon_nr) {    // 1... 65'534 (0xFFFE)
   globalOXOCard.setupAsIBeacon(beacon_nr);
 }
