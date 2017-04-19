@@ -1,11 +1,11 @@
 /**-----------------------------------------------------------------------------
- * \file    OXOCard.h
+ * \file    OXOcard.h
  * \author  jh, tg
- * \date    xx.03.2017
+ * \date    xx.02.2017
  *
  * \version 1.0
  *
- * \brief   The OXOCard is a board for kids to learn programming with Arduino
+ * \brief   The OXOcard is a board for kids to learn programming with Arduino
  *
  * @{
  -----------------------------------------------------------------------------*/
@@ -32,26 +32,26 @@
 #define DEFAULT_AUTO_TURN_OFF     120           // in seconds
 
 #define BAUDRATE_BLE              9600//19200   // in baud
-#define BLE_NAME                  "OXOCard"
-#define BLE_DEFAULT_UUID          "4F584F43617264111111111111111111"  // "OXOCard"
+#define BLE_NAME                  "OXOcard"
+#define BLE_DEFAULT_UUID          "4F584F63617264111111111111111111"  // "OXOcard"
 #define BLE_DEFAULT_MARJOR        4
 
 /* Macros ----------------------------------------------------- */
 #ifdef DEBUG_OXOCARD
-  #define DebugOXOCard_print(...)     Serial.print(__VA_ARGS__)
-  #define DebugOXOCard_println(...)   Serial.println(__VA_ARGS__)
+  #define DebugOXOcard_print(...)     Serial.print(__VA_ARGS__)
+  #define DebugOXOcard_println(...)   Serial.println(__VA_ARGS__)
 #else
-  #define DebugOXOCard_print(...)
-  #define DebugOXOCard_println(...)
+  #define DebugOXOcard_print(...)
+  #define DebugOXOcard_println(...)
 #endif
 
 /* Class ------------------------------------------------------ */
-class OXOCard
+class OXOcard
 {
 public:
   /* constructor(s) & deconstructor */
-  OXOCard();
-  ~OXOCard();
+  OXOcard();
+  ~OXOcard();
 
   /* public enumerations */
   //...

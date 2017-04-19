@@ -1,13 +1,12 @@
 /**-----------------------------------------------------------------------------
- * \file    OXOCardRunner.h
+ * \file    OXOcardRunner.h
  * \author  jh, tg
  * \date    xx.02.2017
  *
  * \version 1.0
  *
- * \brief   The OXOCardRunner is a set of simplified functions for
- *          programming
-
+ * \brief   The OXOcardRunner is a set of simplified functions for
+ *          programming the OXOcard
  *
  * @{
  -----------------------------------------------------------------------------*/
@@ -17,7 +16,7 @@
 #define OXOCARD_RUNNER_H_
 
 /* Includes --------------------------------------------------- */
-#include "OXOCard.h"
+#include "OXOcard.h"
 
 /* global variables ------------------------------------------- */
 uint16_t autoTurnOffAfter = -1;
@@ -29,16 +28,16 @@ volatile int secondsSinceLastReset = 0;
 enum orientation : byte {UNKNOWN = 0, UP = 1, DOWN = 2, HORIZONTALLY = 3, VERTICALLY = 4};
 
 /* Object instantiations -------------------------------------- */
-OXOCard globalOXOCard;
+OXOcard globalOXOcard;
 
 /* System functions ------------------------------------------- */
 void initVariant() {      // hook function from Arduino to allow 3rd party variant-specific initialization
-  globalOXOCard.begin();
+  globalOXOcard.begin();
 }
 
 /* ------------------------------------- */
 void turnOff() {
-   globalOXOCard.turnOff();
+   globalOXOcard.turnOff();
 }
 
 /* ------------------------------------- */
@@ -54,7 +53,7 @@ void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF)
   if (goingToTurnOff)
   {
     goingToTurnOff = false;
-    globalOXOCard.turnOff();
+    globalOXOcard.turnOff();
   }
 }
 
@@ -93,60 +92,60 @@ bool isRightButtonPressed() {
 
 /* LED-Matrix functions --------------------------------------- */
 void clearDisplay() {
-   globalOXOCard.matrix->fillScreen(0);
+   globalOXOcard.matrix->fillScreen(0);
 }
 
 /* ------------------------------------- */
 void turnDisplayOn() {
-  globalOXOCard.matrix->fillScreen(255);
+  globalOXOcard.matrix->fillScreen(255);
 }
 
 /* ------------------------------------- */
 void fillDisplay(byte brightness=255) {
-  globalOXOCard.matrix->fillScreen(brightness);
+  globalOXOcard.matrix->fillScreen(brightness);
 }
 
 /* ------------------------------------- */
 void drawPixel(byte x, byte y, byte brightness=255) {
-  globalOXOCard.matrix->drawPixel(x,y,brightness);
+  globalOXOcard.matrix->drawPixel(x,y,brightness);
 }
 
 /* ------------------------------------- */
 void drawRectangle(byte x, byte y, byte l, byte h, byte b=255) {
-  globalOXOCard.matrix->drawRectangle(x,y,l,h,b);
+  globalOXOcard.matrix->drawRectangle(x,y,l,h,b);
 };
 
 /* ------------------------------------- */
 void drawFilledRectangle(byte x, byte y, byte l, byte h, byte b=255) {
-  globalOXOCard.matrix->drawFilledRectangle(x,y,l,h,b);
+  globalOXOcard.matrix->drawFilledRectangle(x,y,l,h,b);
 };
 
 /* ------------------------------------- */
 void drawLine(byte x0, byte y0, byte x1, byte y1, byte b=255)
 {
-  globalOXOCard.matrix->drawLine(x0,y0,x1,y1,b);
+  globalOXOcard.matrix->drawLine(x0,y0,x1,y1,b);
 };
 
 /* ------------------------------------- */
 void drawCircle(byte x0, byte y0, byte r, byte b=255)
 {
-  globalOXOCard.matrix->drawCircle(x0,y0,r,b);
+  globalOXOcard.matrix->drawCircle(x0,y0,r,b);
 };
 
 /* ------------------------------------- */
 void drawFilledCircle(byte x0, byte y0, byte r, byte b=255)
 {
-  globalOXOCard.matrix->drawFilledCircle(x0,y0,r,b);
+  globalOXOcard.matrix->drawFilledCircle(x0,y0,r,b);
 };
 
 /* ------------------------------------- */
 void drawTriangle(byte x0, byte y0, byte x1, byte y1, byte x2, byte y2, byte b=255) {
-  globalOXOCard.matrix->drawTriangle(x0,y0,x1,y1,x2,y2,b);
+  globalOXOcard.matrix->drawTriangle(x0,y0,x1,y1,x2,y2,b);
 }
 
 /* ------------------------------------- */
 void drawFilledTriangle(byte x0, byte y0, byte x1, byte y1, byte x2, byte y2, byte b=255) {
-  globalOXOCard.matrix->drawFilledTriangle(x0,y0,x1,y1,x2,y2,b);
+  globalOXOcard.matrix->drawFilledTriangle(x0,y0,x1,y1,x2,y2,b);
 }
 
 /* ------------------------------------- */
@@ -156,7 +155,7 @@ void drawImage(byte image[8], byte brightness=255) {
     for (byte x = 0;x<=7;x++) {
       if (b & (1 << (7-x))) {
 
-        globalOXOCard.matrix->drawPixel(x,y,brightness);
+        globalOXOcard.matrix->drawPixel(x,y,brightness);
       }
     }
   }
@@ -179,7 +178,7 @@ void drawImage(byte b0,
 
 /* ------------------------------------- */
 void drawChar(byte x, byte y, char c, byte brightness=255) {
-  globalOXOCard.matrix->drawChar(x, y,  c, brightness);
+  globalOXOcard.matrix->drawChar(x, y,  c, brightness);
 }
 
 /* ------------------------------------- */
@@ -203,32 +202,32 @@ void drawNumber(byte number, byte brightness=255) {
 /* Accelerometer functions ------------------------------------ */
 int getXAcceleration() {
   float vector[3];
-  globalOXOCard.accel->getAccelerationVector(vector);
+  globalOXOcard.accel->getAccelerationVector(vector);
   return vector[0]*255;
 }
 
 /* ------------------------------------- */
 int getYAcceleration() {
   float vector[3];
-  globalOXOCard.accel->getAccelerationVector(vector);
+  globalOXOcard.accel->getAccelerationVector(vector);
   return vector[1]*255;
 }
 
 /* ------------------------------------- */
 int getZAcceleration() {
   float vector[3];
-  globalOXOCard.accel->getAccelerationVector(vector);
+  globalOXOcard.accel->getAccelerationVector(vector);
   return vector[2]*255;
 }
 
 /* ------------------------------------- */
 byte getOrientation() {
-  return byte(globalOXOCard.accel->getOrientation());    // 1 = UP, 2 = DOWN, 3 = HORIZONTALLY, 4 = VERTICALLY
+  return byte(globalOXOcard.accel->getOrientation());    // 1 = UP, 2 = DOWN, 3 = HORIZONTALLY, 4 = VERTICALLY
 }
 
 // String getOrientation() {
 //   String orientation;
-//   switch(byte(globalOXOCard.accel->getOrientation()))
+//   switch(byte(globalOXOcard.accel->getOrientation()))
 //   {
 //     case UP:           orientation = "UP";           break;
 //     case DOWN:         orientation = "DOWN";         break;
@@ -241,36 +240,36 @@ byte getOrientation() {
 
 /* ------------------------------------- */
 bool isOrientationUp() {
-  return byte(globalOXOCard.accel->getOrientation()) == UP;
+  return byte(globalOXOcard.accel->getOrientation()) == UP;
 }
 
 bool isOrientationDown() {
-  return byte(globalOXOCard.accel->getOrientation()) == DOWN;
+  return byte(globalOXOcard.accel->getOrientation()) == DOWN;
 }
 
 bool isOrientationHorizontally() {
-  return byte(globalOXOCard.accel->getOrientation()) == HORIZONTALLY;
+  return byte(globalOXOcard.accel->getOrientation()) == HORIZONTALLY;
 }
 
 bool isOrientationVertically() {
-  return byte(globalOXOCard.accel->getOrientation()) == VERTICALLY;
+  return byte(globalOXOcard.accel->getOrientation()) == VERTICALLY;
 }
 
 /* BLE functions ---------------------------------------------- */
 void setupAsIBeacon(String beaconName) {    // max. 20 characters
-  globalOXOCard.setupAsIBeacon(beaconName);
+  globalOXOcard.setupAsIBeacon(beaconName);
 }
 void setupAsIBeacon(uint16_t beaconNr) {    // 1... 65'534 (0xFFFE)
-  globalOXOCard.setupAsIBeacon(beaconNr);
+  globalOXOcard.setupAsIBeacon(beaconNr);
 }
 
 /* ------------------------------------- */
 int findIBeacon(String beaconName) {
-  return globalOXOCard.findIBeacon(beaconName);
+  return globalOXOcard.findIBeacon(beaconName);
 }
 
 int findIBeacon(uint16_t beaconNr) {
-  return globalOXOCard.findIBeacon(beaconNr);
+  return globalOXOcard.findIBeacon(beaconNr);
 }
 
 /* Tone functions --------------------------------------------- */

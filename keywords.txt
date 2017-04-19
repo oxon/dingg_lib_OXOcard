@@ -7,12 +7,12 @@
 #-------------------------------------------------
 # KEYWORD1: Classes, datatypes and C++ keywords
 #-------------------------------------------------
-OXOCard				KEYWORD1
+OXOcard				KEYWORD1
 
 #-------------------------------------------------
 # KEYWORD2: Methods and Functions
 #-------------------------------------------------
-#OXOCard:
+#OXOcard:
 begin				KEYWORD2
 turnOff				KEYWORD2
 setupAsIBeacon			KEYWORD2
@@ -22,7 +22,7 @@ disableUnusedCpuFunctions	KEYWORD2
 initTimerIRQ			KEYWORD2
 getLEDBlue			KEYWORD2
 
-#OXOCardRunner:
+#OXOcardRunner:
 turnOff				KEYWORD2
 handleAutoTurnOff		KEYWORD2
 isLeftButtonPressed		KEYWORD2

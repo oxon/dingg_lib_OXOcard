@@ -1,20 +1,20 @@
 /**-----------------------------------------------------------------------------
- * \file    OXOCard.cpp
+ * \file    OXOcard.cpp
  * \author  jh, tg
  * \date    xx.02.2017
  * @{
  -----------------------------------------------------------------------------*/
 
 /* Includes --------------------------------------------------- */
-#include "OXOCard.h"
+#include "OXOcard.h"
 
 /* Public ----------------------------------------------------- */
-OXOCard::OXOCard()
+OXOcard::OXOcard()
 {
 
 }
 
-OXOCard::~OXOCard()
+OXOcard::~OXOcard()
 {
   delete matrix;
   delete accel;
@@ -25,13 +25,13 @@ OXOCard::~OXOCard()
 /* System methods */
 /** ===========================================================
  * \fn      begin
- * \brief   initializes the OXOCard
+ * \brief   initializes the OXOcard
  ============================================================== */
-void OXOCard::begin()
+void OXOcard::begin()
 {
   #ifdef DEBUG_OXOCARD
     Serial.begin(DEBUG_BAUDRATE_OXOCARD);
-    DebugOXOCard_println("");
+    DebugOXOcard_println("");
   #endif
 
   initPins();
@@ -40,19 +40,19 @@ void OXOCard::begin()
   initTimerIRQ(1, 1024, 7812);   // interrupt every 1 Second
 
   /* init LED matrix */
-  DebugOXOCard_println(F("init LED matrix"));
+  DebugOXOcard_println(F("init LED matrix"));
   matrix = new IS31FL3731(Wire, &P_EN_LED_DRIVER, EN_LED_DRIVER, 8, 8);
   matrix->begin();
   matrix->clear();
   //matrix->drawRectangle(0, 0, 8, 8, 255);
 
   /* init accelerometer */
-  DebugOXOCard_println(F("init accelerometer"));
+  DebugOXOcard_println(F("init accelerometer"));
   accel = new MMA7660FC(Wire);
   accel->begin();
 
   /* init BLE */
-  DebugOXOCard_println(F("init BLE"));
+  DebugOXOcard_println(F("init BLE"));
   bleSerial = new SoftwareSerial(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
   ble = new HM11_SoftwareSerial(*bleSerial, &P_SW_RXD, SW_RXD, &P_SW_TXD, SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
   delay(5);  // wait some time to charge the 22uF capacitor
@@ -67,8 +67,8 @@ void OXOCard::begin()
  *
  * \requ    <avr/interrupt.h> and <avr/sleep.h>
  ============================================================== */
-void OXOCard::turnOff() {
-  DebugOXOCard_println(F("turnOff"));
+void OXOcard::turnOff() {
+  DebugOXOcard_println(F("turnOff"));
 
   /* check periphery state */
   bool isBlueLEDEnabled = getLEDBlue();
@@ -143,17 +143,17 @@ void OXOCard::turnOff() {
 /* BLE methods */
 /** ===========================================================
  * \fn      setupAsIBeacon
- * \brief   setup the BLE module of the OXOCard as iBeacon
+ * \brief   setup the BLE module of the OXOcard as iBeacon
  *
  * \param   (str)    iBeacon name (max. 20 characters)
  *          (struct) advertInterval
  * \return  -
  ============================================================== */
-void OXOCard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInterval_t interv)
+void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInterval_t interv)
 {
   if (beaconName.length() > 20)
   {
-    DebugOXOCard_println("iBeacon name is too long! (max. 20 characters)");
+    DebugOXOcard_println("iBeacon name is too long! (max. 20 characters)");
     beaconName = beaconName.substring(0, 20);
   }
 
@@ -168,13 +168,13 @@ void OXOCard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInter
 
 /** ===========================================================
  * \fn      setupAsIBeacon
- * \brief   setup the BLE module of the OXOCard as iBeacon
+ * \brief   setup the BLE module of the OXOcard as iBeacon
  *
  * \param   (uint)   iBeacon number (1... 65534)
  *          (struct) advertInterval
  * \return  -
  ============================================================== */
-void OXOCard::setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial::advertInterval_t interv)
+void OXOcard::setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial::advertInterval_t interv)
 {
   HM11_SoftwareSerial::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
@@ -193,7 +193,7 @@ void OXOCard::setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial::advertInter
  * \param   (str)  iBeacon name (max. 20 characters)
  * \return  (int)  txPower
  ============================================================== */
-int16_t OXOCard::findIBeacon(String beaconName)
+int16_t OXOcard::findIBeacon(String beaconName)
 {
   static bool firstTime = true;
   int16_t txPower = 0;
@@ -207,24 +207,24 @@ int16_t OXOCard::findIBeacon(String beaconName)
   static HM11_SoftwareSerial::iBeaconData_t iBeacon;
   iBeaconNameToIBeaconUUID(beaconName, &iBeacon);
 
-  DebugOXOCard_println(F("detectIBeacon..."));
+  DebugOXOcard_println(F("detectIBeacon..."));
   if (ble->detectIBeacon(&iBeacon))
   {
     setLEDBlue(HIGH);
-    DebugOXOCard_print(F("iBeacon.accessAddress = ")); DebugOXOCard_println(iBeacon.accessAddress);
-    DebugOXOCard_print(F("iBeacon.uuid = ")); DebugOXOCard_println(iBeacon.uuid);
-    DebugOXOCard_print(F("iBeacon.deviceAddress = ")); DebugOXOCard_println(iBeacon.deviceAddress);
-    DebugOXOCard_print(F("iBeacon.marjor = ")); DebugOXOCard_println(iBeacon.marjor);
-    DebugOXOCard_print(F("iBeacon.minor = ")); DebugOXOCard_println(iBeacon.minor);
-    DebugOXOCard_print(F("iBeacon.txPower = ")); DebugOXOCard_println(iBeacon.txPower);
+    DebugOXOcard_print(F("iBeacon.accessAddress = ")); DebugOXOcard_println(iBeacon.accessAddress);
+    DebugOXOcard_print(F("iBeacon.uuid = ")); DebugOXOcard_println(iBeacon.uuid);
+    DebugOXOcard_print(F("iBeacon.deviceAddress = ")); DebugOXOcard_println(iBeacon.deviceAddress);
+    DebugOXOcard_print(F("iBeacon.marjor = ")); DebugOXOcard_println(iBeacon.marjor);
+    DebugOXOcard_print(F("iBeacon.minor = ")); DebugOXOcard_println(iBeacon.minor);
+    DebugOXOcard_print(F("iBeacon.txPower = ")); DebugOXOcard_println(iBeacon.txPower);
     txPower = iBeacon.txPower;
   }
   else
   {
-    DebugOXOCard_println(F("no iBeacon found"));
+    DebugOXOcard_println(F("no iBeacon found"));
     setLEDBlue(LOW);
   }
-  DebugOXOCard_println();
+  DebugOXOcard_println();
 
   return txPower;
 }
@@ -236,7 +236,7 @@ int16_t OXOCard::findIBeacon(String beaconName)
  * \param   (uint) iBeacon number (1... 65534)
  * \return  (int)  txPower
  ============================================================== */
-int16_t OXOCard::findIBeacon(uint16_t beaconNr)
+int16_t OXOcard::findIBeacon(uint16_t beaconNr)
 {
   static bool firstTime = true;
   int16_t txPower = 0;
@@ -252,24 +252,24 @@ int16_t OXOCard::findIBeacon(uint16_t beaconNr)
     firstTime = false;
   }
 
-  DebugOXOCard_println(F("detectIBeacon..."));
+  DebugOXOcard_println(F("detectIBeacon..."));
   if (ble->detectIBeacon(&iBeacon))
   {
     setLEDBlue(HIGH);
-    DebugOXOCard_print(F("iBeacon.accessAddress = ")); DebugOXOCard_println(iBeacon.accessAddress);
-    DebugOXOCard_print(F("iBeacon.uuid = ")); DebugOXOCard_println(iBeacon.uuid);
-    DebugOXOCard_print(F("iBeacon.deviceAddress = ")); DebugOXOCard_println(iBeacon.deviceAddress);
-    DebugOXOCard_print(F("iBeacon.marjor = ")); DebugOXOCard_println(iBeacon.marjor);
-    DebugOXOCard_print(F("iBeacon.minor = ")); DebugOXOCard_println(iBeacon.minor);
-    DebugOXOCard_print(F("iBeacon.txPower = ")); DebugOXOCard_println(iBeacon.txPower);
+    DebugOXOcard_print(F("iBeacon.accessAddress = ")); DebugOXOcard_println(iBeacon.accessAddress);
+    DebugOXOcard_print(F("iBeacon.uuid = ")); DebugOXOcard_println(iBeacon.uuid);
+    DebugOXOcard_print(F("iBeacon.deviceAddress = ")); DebugOXOcard_println(iBeacon.deviceAddress);
+    DebugOXOcard_print(F("iBeacon.marjor = ")); DebugOXOcard_println(iBeacon.marjor);
+    DebugOXOcard_print(F("iBeacon.minor = ")); DebugOXOcard_println(iBeacon.minor);
+    DebugOXOcard_print(F("iBeacon.txPower = ")); DebugOXOcard_println(iBeacon.txPower);
     txPower = iBeacon.txPower;
   }
   else
   {
-    DebugOXOCard_println(F("no iBeacon found"));
+    DebugOXOcard_println(F("no iBeacon found"));
     setLEDBlue(LOW);
   }
-  DebugOXOCard_println();
+  DebugOXOcard_println();
 
   return txPower;
 }
@@ -279,9 +279,9 @@ int16_t OXOCard::findIBeacon(uint16_t beaconNr)
  * \fn      initPins
  * \brief   initializes used I/Os of the uC
  ============================================================== */
-void OXOCard::initPins()
+void OXOcard::initPins()
 {
-  DebugOXOCard_println(F("initPins"));
+  DebugOXOcard_println(F("initPins"));
 
   /* Port B */
   DDRB =  0b00000010; // SW-TXD (must be defined as output!)
@@ -304,9 +304,9 @@ void OXOCard::initPins()
  *
  * \note    uC: ATmega328P
  ============================================================== */
-void OXOCard::disableUnusedCpuFunctions()
+void OXOcard::disableUnusedCpuFunctions()
 {
-  DebugOXOCard_println(F("disableUnusedCpuFunctions"));
+  DebugOXOcard_println(F("disableUnusedCpuFunctions"));
 
   setBit(ACSR, ACD);        // disable ACD
   clearBit(ADCSRA, ADEN);   // disable ADC
@@ -335,7 +335,7 @@ void OXOCard::disableUnusedCpuFunctions()
  *          (uint) divisor value (0... 255 or 65535)
  * \return  -
  ============================================================== */
-void OXOCard::initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor)
+void OXOcard::initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor)
 {
   Serial.println(F("initTimerIRQ"));
 
@@ -348,7 +348,7 @@ void OXOCard::initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t diviso
     case 256:  prescaler = uint8_t(0x04); break;
     case 1024: prescaler = uint8_t(0x05); break;
     default:
-      DebugOXOCard_println(F("invalid TIM prescaler!"));
+      DebugOXOcard_println(F("invalid TIM prescaler!"));
       for(;;);
   }
   switch (timer_nr)
@@ -408,7 +408,7 @@ void OXOCard::initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t diviso
       break;
     #endif
     default:
-      DebugOXOCard_println(F("invalid timer_nr!"));
+      DebugOXOcard_println(F("invalid timer_nr!"));
       for(;;);
   }
   sei();
@@ -421,7 +421,7 @@ void OXOCard::initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t diviso
  * \param   -
  * \return  (bool) pin state
  ============================================================== */
-inline bool OXOCard::getLEDBlue()
+inline bool OXOcard::getLEDBlue()
 {
   return !getBit(PIN_LED_BLUE, LED_BLUE);
 }
@@ -435,28 +435,28 @@ inline bool OXOCard::getLEDBlue()
  *          iBeacon  iBeacon structure pointer (see struct in the HM11 header-file)
  * \return  -
  ============================================================== */
-void OXOCard::iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial::iBeaconData_t *iBeacon)
+void OXOcard::iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial::iBeaconData_t *iBeacon)
 {
   char hexCharArray[20*2];
   for (uint8_t i = 0; i < 20*2; i++) hexCharArray[i] = '1';  // init with '1' since the HM-11 doesn't allow '0'
-  //DebugOXOCard_print("String(hexCharArray) = "); DebugOXOCard_println(String(hexCharArray));
+  //DebugOXOcard_print("String(hexCharArray) = "); DebugOXOcard_println(String(hexCharArray));
   for (uint8_t i = 0; i < beaconName.length(); i++)
   {
     String tempStr = ble->byteToHexString(uint8_t(beaconName[i]));
     hexCharArray[i*2]   = tempStr[0];
     hexCharArray[i*2+1] = tempStr[1];
   }
-  //DebugOXOCard_print("String(hexCharArray) = "); DebugOXOCard_println(String(hexCharArray));
+  //DebugOXOcard_print("String(hexCharArray) = "); DebugOXOcard_println(String(hexCharArray));
 
   iBeacon->uuid = "";
   for (uint8_t i = 0;    i < 16*2; i++) iBeacon->uuid.concat(hexCharArray[i]);
-  //DebugOXOCard_print("iBeacon->uuid = "); DebugOXOCard_println(iBeacon->uuid);
+  //DebugOXOcard_print("iBeacon->uuid = "); DebugOXOcard_println(iBeacon->uuid);
   iBeacon->marjor = 0;
   for (uint8_t i = 16*2; i < 18*2; i++) iBeacon->marjor += uint8_t(hexCharArray[i] - '0');
-  //DebugOXOCard_print("iBeacon->marjor = "); DebugOXOCard_println(iBeacon->marjor);
+  //DebugOXOcard_print("iBeacon->marjor = "); DebugOXOcard_println(iBeacon->marjor);
   iBeacon->minor = 0;
   for (uint8_t i = 18*2; i < 20*2; i++) iBeacon->minor  += uint8_t(hexCharArray[i] - '0');
-  //DebugOXOCard_print("iBeacon->minor = "); DebugOXOCard_println(iBeacon->minor);
+  //DebugOXOcard_print("iBeacon->minor = "); DebugOXOcard_println(iBeacon->minor);
 }
 
 /** ===========================================================
@@ -478,7 +478,7 @@ ISR(INT1_vect)
 
   sleep_disable();
 
-  DebugOXOCard_println(F("wkUpInt2 occured, waking up..."));
+  DebugOXOcard_println(F("wkUpInt2 occured, waking up..."));
 }
 
 /** ===========================================================
@@ -501,5 +501,5 @@ ISR(INT0_vect)
   /* disable sleep-mode */
   sleep_disable();
 
-  DebugOXOCard_println("wkUpInt3 occured, waking up...");
+  DebugOXOcard_println("wkUpInt3 occured, waking up...");
 }
