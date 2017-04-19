@@ -56,6 +56,7 @@ void OXOCard::begin()
   bleSerial = new SoftwareSerial(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
   ble = new HM11_SoftwareSerial(*bleSerial, &P_SW_RXD, SW_RXD, &P_SW_TXD, SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
   delay(5);  // wait some time to charge the 22uF capacitor
+
   ble->begin(BAUDRATE_BLE);
 }
 

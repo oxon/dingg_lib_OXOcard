@@ -23,6 +23,8 @@
 uint16_t autoTurnOffAfter = -1;
 volatile uint16_t autoTurnOffCnt = 0;
 volatile bool goingToTurnOff = false;
+volatile bool serialOn = false;
+volatile int secondsSinceLastReset = 0;
 
 enum orientation : byte {UNKNOWN = 0, UP = 1, DOWN = 2, HORIZONTALLY = 3, VERTICALLY = 4};
 
@@ -199,24 +201,24 @@ void drawNumber(byte number, byte brightness=255) {
 }
 
 /* Accelerometer functions ------------------------------------ */
-float getXAcceleration() {
+int getXAcceleration() {
   float vector[3];
   globalOXOCard.accel->getAccelerationVector(vector);
-  return vector[0];
+  return vector[0]*255;
 }
 
 /* ------------------------------------- */
-float getYAcceleration() {
+int getYAcceleration() {
   float vector[3];
   globalOXOCard.accel->getAccelerationVector(vector);
-  return vector[1];
+  return vector[1]*255;
 }
 
 /* ------------------------------------- */
-float getZAcceleration() {
+int getZAcceleration() {
   float vector[3];
   globalOXOCard.accel->getAccelerationVector(vector);
-  return vector[2];
+  return vector[2]*255;
 }
 
 /* ------------------------------------- */
@@ -272,11 +274,8 @@ int findIBeacon(uint16_t beaconNr) {
 }
 
 /* Tone functions --------------------------------------------- */
-void tone(unsigned int frequency) {
-  tone(PIN_NR_PIEZO, frequency, 0);
-}
-
-void tone(int frequency, int duration) {
+void tone(int frequency, int duration = 0) {
+  if (frequency < 0) return;
   tone(PIN_NR_PIEZO, (unsigned int)(frequency), (unsigned long)(duration));
 }
 
@@ -291,6 +290,87 @@ void playMelody(int tones[], int lengths[], int size, int pause = 100) {
     noTone();
     delay(pause);
   }
+}
+
+void resetTimer() {
+  secondsSinceLastReset = millis();
+}
+
+int getTimerSeconds() {
+  return (millis() - secondsSinceLastReset) / 1000;
+}
+
+void checkIfSerialOn() {
+  if (!serialOn) {
+    Serial.begin(DEBUG_BAUDRATE_OXOCARD);
+    serialOn = true;
+  }
+}
+
+void print(const String &s) {
+  checkIfSerialOn();
+  Serial.print(s);
+}
+void print(const char chrs[] ) {
+  checkIfSerialOn();
+  Serial.print(chrs);
+}
+void print(char c) {
+  checkIfSerialOn();
+  Serial.print(c);
+}
+void print(unsigned char c, int x = DEC){
+  checkIfSerialOn();
+  Serial.print(c,x);
+}
+void print(int i, int x = DEC){
+  checkIfSerialOn();
+  Serial.print(i,x);
+}
+void print(unsigned int i, int x = DEC){
+  checkIfSerialOn();
+  Serial.print(i,x);
+}
+void print(long l, int x = DEC){
+  checkIfSerialOn();
+  Serial.print(l,x);
+}
+void print(unsigned long l, int x = DEC){
+  checkIfSerialOn();
+  Serial.print(l,x);
+}
+
+void println(const String &s) {
+  checkIfSerialOn();
+  Serial.println(s);
+}
+void println(const char chrs[] ) {
+  checkIfSerialOn();
+  Serial.println(chrs);
+}
+void println(char c) {
+  checkIfSerialOn();
+  Serial.println(c);
+}
+void println(unsigned char c, int x = DEC){
+  checkIfSerialOn();
+  Serial.println(c,x);
+}
+void println(int i, int x = DEC){
+  checkIfSerialOn();
+  Serial.println(i,x);
+}
+void println(unsigned int i, int x = DEC){
+  checkIfSerialOn();
+  Serial.println(i,x);
+}
+void println(long l, int x = DEC){
+  checkIfSerialOn();
+  Serial.println(l,x);
+}
+void println(unsigned long l, int x = DEC){
+  checkIfSerialOn();
+  Serial.println(l,x);
 }
 
 /* Interrupts ------------------------------------------------- */
