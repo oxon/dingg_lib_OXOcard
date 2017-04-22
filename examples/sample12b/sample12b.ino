@@ -17,6 +17,7 @@ void loop() {
   if (stopped) {
     if (isMiddleButtonPressed()) {
       stopped = false;
+      resetTimer();
     } else {
       resetTimer();
       drawIntro();
@@ -31,10 +32,10 @@ void loop() {
 
   if ((ship_x == meteor_x || ship_x + 1 == meteor_x)
       && ship_y == meteor_y) {
-        
+
     noTone();
     drawGameOver();
- 
+
     ship_x = 0;
     ship_y = 7;
     stopped = true;
@@ -75,9 +76,9 @@ void loop() {
   } else if (seconds < 10) {
     delay(40);
   } else {
-    delay(30); 
+    delay(30);
   }
-    
+
 }
 
 void drawIntro() {
