@@ -8,31 +8,21 @@
 /* Includes --------------------------------------------------- */
 #include "OXOcard.h"
 
+/* Global variables ------------------------------------------- */
+unsigned int autoTurnOffAfter = -1;
+volatile unsigned int autoTurnOffCnt = 0;
+volatile bool goingToTurnOff = false;
+
 /* Public ----------------------------------------------------- */
-OXOcard::OXOcard()
-{
-
-}
-
-OXOcard::~OXOcard()
-{
-  delete matrix;
-  delete accel;
-  delete bleSerial;
-  delete ble;
-}
-
-/* System methods */
+/* System functions */
 /** ===========================================================
  * \fn      begin
  * \brief   initializes the OXOcard
  ============================================================== */
 void OXOcard::begin()
 {
-  #ifdef DEBUG_OXOCARD
-    Serial.begin(DEBUG_BAUDRATE_OXOCARD);
-    DebugOXOcard_println("");
-  #endif
+  DebugOXOcard_begin(DEBUG_BAUDRATE_OXOCARD);
+  DebugOXOcard_println("");
 
   initPins();
   disableUnusedCpuFunctions();
@@ -53,8 +43,8 @@ void OXOcard::begin()
 
   /* init BLE */
   DebugOXOcard_println(F("init BLE"));
-  bleSerial = new SoftwareSerial(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
-  ble = new HM11_SoftwareSerial(*bleSerial, &P_SW_RXD, SW_RXD, &P_SW_TXD, SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
+  bleSerial = new SoftwareSerial0(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
+  ble = new HM11_SoftwareSerial0(*bleSerial, &P_SW_RXD, SW_RXD, &P_SW_TXD, SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
   delay(5);  // wait some time to charge the 22uF capacitor
 
   ble->begin(BAUDRATE_BLE);
@@ -66,8 +56,13 @@ void OXOcard::begin()
  *          sleep-mode, it will wake up again if INTn occures
  *
  * \requ    <avr/interrupt.h> and <avr/sleep.h>
+ *
+ * \param   leftButton    enable wake-up by the left button
+ * \param   middleButton  enable wake-up by the middle button
+ * \param   rightButton   enable wake-up by the right button
  ============================================================== */
-void OXOcard::turnOff() {
+void OXOcard::turnOff(bool leftButton, bool middleButton, bool rightButton)
+{
   DebugOXOcard_println(F("turnOff"));
 
   /* check periphery state */
@@ -92,22 +87,47 @@ void OXOcard::turnOff() {
   /* all interrupts have to be disabled during turn off configurations */
   cli();
 
-  /* define that a low-level of INTn generates an interrupt request */
-  //clearBit(EICRA, ISC11); clearBit(EICRA, ISC10); // INT1
-  //clearBit(EICRA, ISC01); clearBit(EICRA, ISC00); // INT0
+  if (leftButton)   // PCINT2
+  {
+    /* mask the correct pin */
+    setBit(PCMSK2, PCINT20); // BUTTON1 = PCINT20
 
-  /* clear the interrupt flags */
-  //setBit(PCIFR, PCIF2);
-  //setBit(EIFR, INTF1);
-  //setBit(EIFR, INTF0);
+    /* clear the interrupt flags */
+    setBit(PCIFR, PCIF2);
 
-  /* enable external interrupt INTn (to wake up later) */
-  //setBit(PCICR, PCIE2); // BUTTON 1
-  //setBit(EIMSK, INT1);  // BUTTON 2
-  //setBit(EIMSK, INT0);  // BUTTON 3
+    /* enable external interrupt PCINTn (to wake up later) */
+    setBit(PCICR, PCIE2);
+  }
 
-//  /* disable other interrupts */
-//  clearBit(TIMSK2, OCIE2A);
+  if (middleButton) // INT1
+  {
+    /* define that a low-level of INTn generates an interrupt request */
+    clearBit(EICRA, ISC11);
+    clearBit(EICRA, ISC10);
+
+    /* clear the interrupt flags */
+    setBit(EIFR, INTF1);
+
+    /* enable external interrupt INTn (to wake up later) */
+    setBit(EIMSK, INT1);
+  }
+
+  if (rightButton)  // INT0
+  {
+    /* define that a low-level of INTn generates an interrupt request */
+    clearBit(EICRA, ISC01);
+    clearBit(EICRA, ISC00);
+
+    /* clear the interrupt flags */
+    setBit(EIFR, INTF0);
+
+    /* enable external interrupt INTn (to wake up later) */
+    setBit(EIMSK, INT0);
+  }
+
+  /* disable other interrupts */
+  clearBit(TIMSK1, OCIE1A);   // autoTurnOff
+  //clearBit(TIMSK2, OCIE2A);
 
   /* choose "Power-down" sleep mode */
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -125,8 +145,9 @@ void OXOcard::turnOff() {
 
   /* INTn occured (button click) -> wakes up! system continues here... */
 
-//  /* reenable other interrupts */
-//  setBit(TIMSK2, OCIE2A);
+  /* reenable other interrupts */
+  setBit(TIMSK1, OCIE1A);
+  //setBit(TIMSK2, OCIE2A);
 
   /* reenable HW-Serial */
   UCSR0B = ucsrb;
@@ -140,7 +161,81 @@ void OXOcard::turnOff() {
   if (isBlueLEDEnabled) setLEDBlue(HIGH);
 }
 
-/* BLE methods */
+/** ===========================================================
+ * \fn      handleAutoTurnOff
+ * \brief   handles the functinality to turnOff after a defined
+ *          time
+ *
+ * \param   (uint) number of seconds until turnOff
+ ============================================================== */
+void OXOcard::handleAutoTurnOff(uint16_t seconds)
+{
+  if (seconds < autoTurnOffAfter)
+  {
+    /* counter has been changed -> reset the interrupt counter */
+    autoTurnOffCnt = 0;
+  }
+  autoTurnOffAfter = seconds;
+
+  if (goingToTurnOff)
+  {
+    goingToTurnOff = false;
+    turnOff();
+  }
+}
+
+/** ===========================================================
+ * \fn      isLeftButtonPressed
+ * \brief   checks if the left button is pressed
+ *
+ * \return  true if button is pressed
+ ============================================================== */
+bool OXOcard::isLeftButtonPressed()
+{
+  bool pressed = false;
+  if (button1Pressed)
+  {
+    autoTurnOffCnt = 0; // prevent autoturnoff after an action
+    pressed = true;
+  }
+  return pressed;
+}
+
+/** ===========================================================
+ * \fn      isMiddleButtonPressed
+ * \brief   checks if the middle button is pressed
+ *
+ * \return  true if button is pressed
+ ============================================================== */
+bool OXOcard::isMiddleButtonPressed()
+{
+  bool pressed = false;
+  if (button2Pressed)
+  {
+    autoTurnOffCnt = 0; // prevent autoturnoff after an action
+    pressed = true;
+  }
+  return pressed;
+}
+
+/** ===========================================================
+ * \fn      isRightButtonPressed
+ * \brief   checks if the right button is pressed
+ *
+ * \return  true if button is pressed
+ ============================================================== */
+bool OXOcard::isRightButtonPressed()
+{
+  bool pressed = false;
+  if (button3Pressed)
+  {
+    autoTurnOffCnt = 0; // prevent autoturnoff after an action
+    pressed = true;
+  }
+  return pressed;
+}
+
+/* BLE functions */
 /** ===========================================================
  * \fn      setupAsIBeacon
  * \brief   setup the BLE module of the OXOcard as iBeacon
@@ -149,7 +244,7 @@ void OXOcard::turnOff() {
  *          (struct) advertInterval
  * \return  -
  ============================================================== */
-void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInterval_t interv)
+void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial0::advertInterval_t interv)
 {
   if (beaconName.length() > 20)
   {
@@ -158,7 +253,7 @@ void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInter
   }
 
   /* convert to hex char array */
-  HM11_SoftwareSerial::iBeaconData_t iBeacon;
+  HM11_SoftwareSerial0::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
   iBeaconNameToIBeaconUUID(beaconName, &iBeacon);
   iBeacon.interv = interv;
@@ -174,9 +269,9 @@ void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial::advertInter
  *          (struct) advertInterval
  * \return  -
  ============================================================== */
-void OXOcard::setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial::advertInterval_t interv)
+void OXOcard::setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial0::advertInterval_t interv)
 {
-  HM11_SoftwareSerial::iBeaconData_t iBeacon;
+  HM11_SoftwareSerial0::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
   iBeacon.uuid = BLE_DEFAULT_UUID;
   iBeacon.marjor = BLE_DEFAULT_MARJOR;
@@ -204,7 +299,7 @@ int16_t OXOcard::findIBeacon(String beaconName)
     firstTime = false;
   }
 
-  static HM11_SoftwareSerial::iBeaconData_t iBeacon;
+  static HM11_SoftwareSerial0::iBeaconData_t iBeacon;
   iBeaconNameToIBeaconUUID(beaconName, &iBeacon);
 
   DebugOXOcard_println(F("detectIBeacon..."));
@@ -241,7 +336,7 @@ int16_t OXOcard::findIBeacon(uint16_t beaconNr)
   static bool firstTime = true;
   int16_t txPower = 0;
 
-  static HM11_SoftwareSerial::iBeaconData_t iBeacon;
+  static HM11_SoftwareSerial0::iBeaconData_t iBeacon;
   iBeacon.minor = beaconNr;              // minor you wish to search for
 
   if (firstTime)
@@ -337,7 +432,7 @@ void OXOcard::disableUnusedCpuFunctions()
  ============================================================== */
 void OXOcard::initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor)
 {
-  Serial.println(F("initTimerIRQ"));
+  DebugOXOcard_println(F("initTimerIRQ"));
 
   cli();
   switch (prescaler)
@@ -435,7 +530,7 @@ inline bool OXOcard::getLEDBlue()
  *          iBeacon  iBeacon structure pointer (see struct in the HM11 header-file)
  * \return  -
  ============================================================== */
-void OXOcard::iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial::iBeaconData_t *iBeacon)
+void OXOcard::iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial0::iBeaconData_t *iBeacon)
 {
   char hexCharArray[20*2];
   for (uint8_t i = 0; i < 20*2; i++) hexCharArray[i] = '1';  // init with '1' since the HM-11 doesn't allow '0'
@@ -459,6 +554,45 @@ void OXOcard::iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial::i
   //DebugOXOcard_print("iBeacon->minor = "); DebugOXOcard_println(iBeacon->minor);
 }
 
+/* Interrupts ------------------------------------------------- */
+/** ===========================================================
+ * \fn      ISR (timer1 OCIE1A interrupt TIMER1_COMPA)
+ * \brief   timer interrupt service routine (handler)
+ *          (f_isr = fcpu / (prescaler * frequency_divisor))
+ *
+ * \param   'TIMER1_COMPA vector'
+ * \return  -
+ ============================================================== */
+ISR (TIMER1_COMPA_vect)
+{
+  autoTurnOffCnt++;
+  if (autoTurnOffCnt >= autoTurnOffAfter)
+  {
+    autoTurnOffCnt = 0;
+    goingToTurnOff = true;
+  }
+}
+
+/** ===========================================================
+ * \fn      ISR (external interrupt PCINT2)
+ * \brief   interrupt service routine (handler) for the wake-up-
+ *          interrupt (PCINT2)
+ *
+ * \requ    <avr/sleep.h>
+ *
+ * \param   'PCINT0 vector'
+ * \return  -
+ ============================================================== */
+ISR(PCINT2_vect)
+{
+  /* disable wake up interrupt INTn */
+  clearBit(PCICR, PCIE2); // BUTTON 1
+  clearBit(EIMSK, INT1);  // BUTTON 2
+  clearBit(EIMSK, INT0);  // BUTTON 3
+  sleep_disable();
+  DebugOXOcard_println(F("wkUpInt1 occured, waking up..."));
+}
+
 /** ===========================================================
  * \fn      ISR (external interrupt INT1)
  * \brief   interrupt service routine (handler) for the wake-up-
@@ -475,9 +609,7 @@ ISR(INT1_vect)
   clearBit(PCICR, PCIE2); // BUTTON 1
   clearBit(EIMSK, INT1);  // BUTTON 2
   clearBit(EIMSK, INT0);  // BUTTON 3
-
   sleep_disable();
-
   DebugOXOcard_println(F("wkUpInt2 occured, waking up..."));
 }
 
@@ -497,9 +629,7 @@ ISR(INT0_vect)
   clearBit(PCICR, PCIE2); // BUTTON 1
   clearBit(EIMSK, INT1);  // BUTTON 2
   clearBit(EIMSK, INT0);  // BUTTON 3
-
   /* disable sleep-mode */
   sleep_disable();
-
   DebugOXOcard_println("wkUpInt3 occured, waking up...");
 }
