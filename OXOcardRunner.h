@@ -16,14 +16,15 @@
 #define OXOCARD_RUNNER_H_
 
 /* Includes --------------------------------------------------- */
+#include <avr/wdt.h>
 #include "OXOcard.h"
 
 /* global variables ------------------------------------------- */
-uint16_t autoTurnOffAfter = -1;
-volatile uint16_t autoTurnOffCnt = 0;
+unsigned int autoTurnOffAfter = -1;
+volatile unsigned int autoTurnOffCnt = 0;
 volatile bool goingToTurnOff = false;
 volatile bool serialOn = false;
-volatile int secondsSinceLastReset = 0;
+volatile unsigned long millisSinceLastReset = 0;
 
 enum orientation : byte {UNKNOWN = 0, UP = 1, DOWN = 2, HORIZONTALLY = 3, VERTICALLY = 4};
 
@@ -41,8 +42,7 @@ void turnOff() {
 }
 
 /* ------------------------------------- */
-void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF)
-{
+void handleAutoTurnOff(unsigned int seconds = DEFAULT_AUTO_TURN_OFF) {
   if (seconds < autoTurnOffAfter)
   {
     /* counter has been changed -> reset the interrupt counter */
@@ -55,6 +55,10 @@ void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF)
     goingToTurnOff = false;
     globalOXOcard.turnOff();
   }
+}
+
+void resetOXOcard() {
+  ((void (*)())0x0)();  // jumpt to address 0x0
 }
 
 /* ------------------------------------- */
@@ -189,13 +193,13 @@ void drawDigit(byte x, byte y, byte digit, byte brightness=255) {
 /* ------------------------------------- */
 void drawNumber(byte number, byte brightness=255) {
   if (number > 99) {
-    drawChar(0,1,'?');
-    drawChar(5,1,'?');
+    drawChar(0,1,'?',brightness);
+    drawChar(5,1,'?',brightness);
   }
   else
   {
-    drawChar(0,1,48 + (number/10));
-    drawChar(5,1,48 + (number%10));
+    drawChar(0,1,48 + (number/10),brightness);
+    drawChar(5,1,48 + (number%10),brightness);
   }
 }
 
@@ -259,7 +263,7 @@ bool isOrientationVertically() {
 void setupAsIBeacon(String beaconName) {    // max. 20 characters
   globalOXOcard.setupAsIBeacon(beaconName);
 }
-void setupAsIBeacon(uint16_t beaconNr) {    // 1... 65'534 (0xFFFE)
+void setupAsIBeacon(unsigned int beaconNr) {    // 1... 65'534 (0xFFFE)
   globalOXOcard.setupAsIBeacon(beaconNr);
 }
 
@@ -268,8 +272,100 @@ int findIBeacon(String beaconName) {
   return globalOXOcard.findIBeacon(beaconName);
 }
 
-int findIBeacon(uint16_t beaconNr) {
+int findIBeacon(unsigned int beaconNr) {
   return globalOXOcard.findIBeacon(beaconNr);
+}
+
+/* ------------------------------------- */
+String getBluetoothMacAddress() {
+  return globalOXOcard.ble->getMacAddress();
+}
+
+void connectToBluetoothMacAddress(String macAddr, bool master) {
+  globalOXOcard.ble->connectToMacAddress(macAddr, master);
+  setLEDBlue(HIGH);
+}
+
+void bluetoothWrite(byte b) {
+  globalOXOcard.bleSerial->write(b);
+}
+
+void bluetoothPrint(char c) {
+  globalOXOcard.bleSerial->print(c);
+}
+
+void bluetoothPrintln(char c) {
+  globalOXOcard.bleSerial->println(c);
+}
+
+byte bluetoothRead() {
+  return globalOXOcard.bleSerial->read();
+}
+
+char bluetoothReadChar() {
+  static byte lastB = 0;
+  byte b = bluetoothRead();
+  if (lastB == 13 && b == 225) b = 10; // blup: handle cr/lf
+  if (b >= 128) b -= 128;
+  lastB = b;
+  return char(b);
+}
+
+// String bluetoothReadString() {
+//   return globalOXOcard.bleSerial->readString();
+// }
+
+byte bluetoothAvailable() {
+  return globalOXOcard.bleSerial->available();
+}
+
+void bluetoothHandshaking(bool master, char handshakeChar = 'H') {
+  const unsigned int timeout = 10000;
+  const unsigned int dtMax = 100;
+  unsigned long msTimeout = millis();
+
+  /* empty the recive buffer */
+  while(bluetoothAvailable())
+  {
+    bluetoothRead();
+    if ((millis() - msTimeout) >= timeout) resetOXOcard();
+  }
+  msTimeout = millis();
+
+  /* handshaking */
+  unsigned long ms = millis();
+  if (master)
+  {
+    Serial.print(F("wait for handshake char..."));
+    while(bluetoothRead() != handshakeChar)
+    {
+      ms = millis();
+
+      Serial.print(F("."));
+      if ((millis() - msTimeout) >= timeout) resetOXOcard();
+      while(!bluetoothAvailable() && (millis() - ms) < dtMax);
+    }
+    bluetoothPrint(handshakeChar);
+    delay(dtMax);
+  }
+  else
+  {
+    Serial.print(F("send handshake char..."));
+    while(bluetoothRead() != handshakeChar)
+    {
+      bluetoothPrint(handshakeChar);
+      ms = millis();
+
+      Serial.print(F("."));
+      if ((millis() - msTimeout) >= timeout) resetOXOcard();
+      while(!bluetoothAvailable() && (millis() - ms) < dtMax);
+    }
+    unsigned int dt = millis() - ms;
+    // Serial.print(F("dt = ")); Serial.println(dt);
+    delay(dtMax - dt/2);
+  }
+  Serial.println();
+  Serial.println(F("handshake succeeded!"));
 }
 
 /* Tone functions --------------------------------------------- */
@@ -284,7 +380,7 @@ void noTone() {
 
 void playMelody(int tones[], int lengths[], int size, int pause = 100) {
   for (int i = 0;i<size;i++) {
-    tone(tones[i],lengths);
+    tone(tones[i]);
     delay(lengths[i]);
     noTone();
     delay(pause);
@@ -292,11 +388,11 @@ void playMelody(int tones[], int lengths[], int size, int pause = 100) {
 }
 
 void resetTimer() {
-  secondsSinceLastReset = millis();
+  millisSinceLastReset = millis();
 }
 
 int getTimerSeconds() {
-  return (millis() - secondsSinceLastReset) / 1000;
+  return (millis() - millisSinceLastReset) / 1000;
 }
 
 void checkIfSerialOn() {
@@ -318,23 +414,23 @@ void print(char c) {
   checkIfSerialOn();
   Serial.print(c);
 }
-void print(unsigned char c, int x = DEC){
+void print(unsigned char c, int x = DEC) {
   checkIfSerialOn();
   Serial.print(c,x);
 }
-void print(int i, int x = DEC){
+void print(int i, int x = DEC) {
   checkIfSerialOn();
   Serial.print(i,x);
 }
-void print(unsigned int i, int x = DEC){
+void print(unsigned int i, int x = DEC) {
   checkIfSerialOn();
   Serial.print(i,x);
 }
-void print(long l, int x = DEC){
+void print(long l, int x = DEC) {
   checkIfSerialOn();
   Serial.print(l,x);
 }
-void print(unsigned long l, int x = DEC){
+void print(unsigned long l, int x = DEC) {
   checkIfSerialOn();
   Serial.print(l,x);
 }
@@ -351,23 +447,23 @@ void println(char c) {
   checkIfSerialOn();
   Serial.println(c);
 }
-void println(unsigned char c, int x = DEC){
+void println(unsigned char c, int x = DEC) {
   checkIfSerialOn();
   Serial.println(c,x);
 }
-void println(int i, int x = DEC){
+void println(int i, int x = DEC) {
   checkIfSerialOn();
   Serial.println(i,x);
 }
-void println(unsigned int i, int x = DEC){
+void println(unsigned int i, int x = DEC) {
   checkIfSerialOn();
   Serial.println(i,x);
 }
-void println(long l, int x = DEC){
+void println(long l, int x = DEC) {
   checkIfSerialOn();
   Serial.println(l,x);
 }
-void println(unsigned long l, int x = DEC){
+void println(unsigned long l, int x = DEC) {
   checkIfSerialOn();
   Serial.println(l,x);
 }
@@ -382,8 +478,7 @@ void println(unsigned long l, int x = DEC){
  * \param   'TIMER1_COMPA vector'
  * \return  -
  ============================================================== */
-ISR (TIMER1_COMPA_vect)
-{
+ISR (TIMER1_COMPA_vect) {
   autoTurnOffCnt++;
   if (autoTurnOffCnt >= autoTurnOffAfter)
   {

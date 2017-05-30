@@ -93,17 +93,17 @@ void OXOcard::turnOff() {
   cli();
 
   /* define that a low-level of INTn generates an interrupt request */
-  clearBit(EICRA, ISC11); clearBit(EICRA, ISC10); // INT1
+  //clearBit(EICRA, ISC11); clearBit(EICRA, ISC10); // INT1
   //clearBit(EICRA, ISC01); clearBit(EICRA, ISC00); // INT0
 
   /* clear the interrupt flags */
   //setBit(PCIFR, PCIF2);
-  setBit(EIFR, INTF1);
+  //setBit(EIFR, INTF1);
   //setBit(EIFR, INTF0);
 
   /* enable external interrupt INTn (to wake up later) */
   //setBit(PCICR, PCIE2); // BUTTON 1
-  setBit(EIMSK, INT1);  // BUTTON 2
+  //setBit(EIMSK, INT1);  // BUTTON 2
   //setBit(EIMSK, INT0);  // BUTTON 3
 
 //  /* disable other interrupts */
