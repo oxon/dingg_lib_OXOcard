@@ -253,6 +253,19 @@ void bluetoothPrintln(char c) {
   globalOXOcard.bleSerial->println(c);
 }
 
+void bluetoothPrint(String str) {
+  for (byte i = 0; i < str.length(); i++) {
+    globalOXOcard.bleSerial->print(str[i]);
+  }
+}
+
+void bluetoothPrintln(String str) {
+  for (byte i = 0; i < str.length()-1; i++) {
+    globalOXOcard.bleSerial->print(str[i]);
+  }
+  globalOXOcard.bleSerial->println(str[str.length()-1]);
+}
+
 byte bluetoothRead() {
   return globalOXOcard.bleSerial->read();
 }

@@ -29,22 +29,22 @@
 // #define DEBUG_OXOCARD  // define to activate Debug prints
 #define DEBUG_BAUDRATE_OXOCARD    115200
 
-#define DEFAULT_AUTO_TURN_OFF     120           // in seconds
+#define DEFAULT_AUTO_TURN_OFF     120     // in seconds
 
-#define BAUDRATE_BLE              9600//19200   // in baud
+#define BAUDRATE_BLE              9600    // in baud
 #define BLE_NAME                  "OXOcard"
 #define BLE_DEFAULT_UUID          "4F584F63617264111111111111111111"  // "OXOcard"
 #define BLE_DEFAULT_MARJOR        4
 
 /* Macros ----------------------------------------------------- */
 #ifdef DEBUG_OXOCARD
+  #define DebugOXOcard_begin(...)     Serial.begin(__VA_ARGS__)
   #define DebugOXOcard_print(...)     Serial.print(__VA_ARGS__)
   #define DebugOXOcard_println(...)   Serial.println(__VA_ARGS__)
-  #define DebugOXOcard_begin(...)     Serial.begin(__VA_ARGS__)
 #else
+  #define DebugOXOcard_begin(...)
   #define DebugOXOcard_print(...)
   #define DebugOXOcard_println(...)
-  #define DebugOXOcard_begin(...)
 #endif
 
 /* Class ------------------------------------------------------ */

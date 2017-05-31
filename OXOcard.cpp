@@ -22,31 +22,28 @@ volatile bool goingToTurnOff = false;
 void OXOcard::begin()
 {
   DebugOXOcard_begin(DEBUG_BAUDRATE_OXOCARD);
-  DebugOXOcard_println("");
+  DebugOXOcard_println();
 
   initPins();
   disableUnusedCpuFunctions();
-
   initTimerIRQ(1, 1024, 7812);   // interrupt every 1 Second
 
-  /* init LED matrix */
+  /* init LED matrix (~30ms) */
   DebugOXOcard_println(F("init LED matrix"));
   matrix = new IS31FL3731(Wire, &P_EN_LED_DRIVER, EN_LED_DRIVER, 8, 8);
-  matrix->begin();
+  matrix->begin(400000L);
   matrix->clear();
-  //matrix->drawRectangle(0, 0, 8, 8, 255);
 
-  /* init accelerometer */
+  /* init accelerometer (~2ms) */
   DebugOXOcard_println(F("init accelerometer"));
   accel = new MMA7660FC(Wire);
-  accel->begin();
+  accel->begin(400000L);
 
-  /* init BLE */
+  /* init BLE (~1500ms) */
   DebugOXOcard_println(F("init BLE"));
   bleSerial = new SoftwareSerial0(PIN_NR_SW_RXD, PIN_NR_SW_TXD);
   ble = new HM11_SoftwareSerial0(*bleSerial, &P_SW_RXD, SW_RXD, &P_SW_TXD, SW_TXD, &P_EN_BLE, EN_BLE, &P_RST_BLE, RST_BLE);
-  delay(5);  // wait some time to charge the 22uF capacitor
-
+  //ble->forceRenew();
   ble->begin(BAUDRATE_BLE);
 }
 
@@ -82,7 +79,7 @@ void OXOcard::turnOff(bool leftButton, bool middleButton, bool rightButton)
   UCSR0B = 0;
   clearBit(P_RXD, RXD);  // necessary!
 
-  delay(100);
+  delay(1);
 
   /* all interrupts have to be disabled during turn off configurations */
   cli();
@@ -286,7 +283,7 @@ void OXOcard::setupAsIBeacon(uint16_t beaconNr, HM11::advertInterval_t interv)
  * \brief   find near iBeacon with given iBeacon name
  *
  * \param   (str)  iBeacon name (max. 20 characters)
- * \return  (int)  txPower
+ * \return  (int)  txPower in dBm
  ============================================================== */
 int16_t OXOcard::findIBeacon(String beaconName)
 {
@@ -329,7 +326,7 @@ int16_t OXOcard::findIBeacon(String beaconName)
  * \brief   find near iBeacon with given number
  *
  * \param   (uint) iBeacon number (1... 65534)
- * \return  (int)  txPower
+ * \return  (int)  txPower in dBm
  ============================================================== */
 int16_t OXOcard::findIBeacon(uint16_t beaconNr)
 {
@@ -629,7 +626,6 @@ ISR(INT0_vect)
   clearBit(PCICR, PCIE2); // BUTTON 1
   clearBit(EIMSK, INT1);  // BUTTON 2
   clearBit(EIMSK, INT0);  // BUTTON 3
-  /* disable sleep-mode */
   sleep_disable();
   DebugOXOcard_println("wkUpInt3 occured, waking up...");
 }
