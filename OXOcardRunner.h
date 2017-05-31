@@ -25,12 +25,12 @@ volatile unsigned long millisSinceLastReset = 0;
 /* Object instantiations -------------------------------------- */
 OXOcard globalOXOcard;
 
-/* System functions ------------------------------------------- */
-void initVariant() {      // hook function from Arduino to allow 3rd party variant-specific initialization
+/* hook function from Arduino to allow 3rd party variant-specific initialization */
+void initVariant() {
   globalOXOcard.begin();
 }
 
-/* ------------------------------------- */
+/* System functions ------------------------------------------- */
 void turnOff(bool leftButton = false, bool middleButton = false, bool rightButton = false) {
    globalOXOcard.turnOff(leftButton, middleButton, rightButton);
 }
@@ -189,27 +189,28 @@ byte getOrientation() {
 
 /* ------------------------------------- */
 bool isOrientationUp() {
-  return byte(globalOXOcard.accel->getOrientation()) == globalOXOcard.accel->UP;
+  return byte(globalOXOcard.accel->getOrientation()) == MMA7660FC::UP;
 }
 
 bool isOrientationDown() {
-  return byte(globalOXOcard.accel->getOrientation()) == globalOXOcard.accel->DOWN;
+  return byte(globalOXOcard.accel->getOrientation()) == MMA7660FC::DOWN;
 }
 
 bool isOrientationHorizontally() {
-  return byte(globalOXOcard.accel->getOrientation()) == globalOXOcard.accel->HORIZONTALLY;
+  return byte(globalOXOcard.accel->getOrientation()) == MMA7660FC::HORIZONTALLY;
 }
 
 bool isOrientationVertically() {
-  return byte(globalOXOcard.accel->getOrientation()) == globalOXOcard.accel->VERTICALLY;
+  return byte(globalOXOcard.accel->getOrientation()) == MMA7660FC::VERTICALLY;
 }
 
 /* BLE functions ---------------------------------------------- */
-void setupAsIBeacon(String beaconName) {      // max. 20 characters
-  globalOXOcard.setupAsIBeacon(beaconName);
+void setupAsIBeacon(String beaconName, HM11::advertInterval_t interv = HM11::INTERV_550MS) {      // max. 20 characters
+  globalOXOcard.setupAsIBeacon(beaconName, interv);
 }
-void setupAsIBeacon(unsigned int beaconNr) {  // 1... 65'534 (0xFFFE)
-  globalOXOcard.setupAsIBeacon(beaconNr);
+
+void setupAsIBeacon(unsigned int beaconNr, HM11::advertInterval_t interv = HM11::INTERV_550MS) {  // 1... 65'534 (0xFFFE)
+  globalOXOcard.setupAsIBeacon(beaconNr, interv);
 }
 
 /* ------------------------------------- */
@@ -219,6 +220,15 @@ int findIBeacon(String beaconName) {
 
 int findIBeacon(unsigned int beaconNr) {
   return globalOXOcard.findIBeacon(beaconNr);
+}
+
+/* ------------------------------------- */
+void setBluetoothTxPower(byte txPower) {    // 0 = -23dbm, 1 = -6dbm, 2 = 0dbm, 3 = 6dbm
+  globalOXOcard.ble->setTxPower(HM11::txPower_t(txPower));
+}
+
+byte getBluetoothTxPower() {                // 0 = -23dbm, 1 = -6dbm, 2 = 0dbm, 3 = 6dbm
+  return byte(globalOXOcard.ble->getTxPower());
 }
 
 /* ------------------------------------- */

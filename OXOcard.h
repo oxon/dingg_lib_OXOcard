@@ -69,8 +69,8 @@ public:
   bool isMiddleButtonPressed();
   bool isRightButtonPressed();
 
-  void setupAsIBeacon(String beaconName, HM11_SoftwareSerial0::advertInterval_t interv = HM11_SoftwareSerial0::INTERV_550MS);
-  void setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial0::advertInterval_t interv = HM11_SoftwareSerial0::INTERV_550MS);
+  void setupAsIBeacon(String beaconName, HM11::advertInterval_t interv = HM11::INTERV_550MS);
+  void setupAsIBeacon(uint16_t beaconNr, HM11::advertInterval_t interv = HM11::INTERV_550MS);
   int16_t findIBeacon(String beaconName);
   int16_t findIBeacon(uint16_t beaconNr);
 
@@ -95,7 +95,7 @@ private:
   void disableUnusedCpuFunctions();
   void initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor);
   inline bool getLEDBlue();
-  void iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial0::iBeaconData_t *iBeacon);
+  void iBeaconNameToIBeaconUUID(String beaconName, HM11::iBeaconData_t *iBeacon);
 
 };
 

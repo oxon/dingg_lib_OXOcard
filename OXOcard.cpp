@@ -240,11 +240,11 @@ bool OXOcard::isRightButtonPressed()
  * \fn      setupAsIBeacon
  * \brief   setup the BLE module of the OXOcard as iBeacon
  *
- * \param   (str)    iBeacon name (max. 20 characters)
- *          (struct) advertInterval
+ * \param   (str)  iBeacon name (max. 20 characters)
+ *          (enum) advertInterval
  * \return  -
  ============================================================== */
-void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial0::advertInterval_t interv)
+void OXOcard::setupAsIBeacon(String beaconName, HM11::advertInterval_t interv)
 {
   if (beaconName.length() > 20)
   {
@@ -253,7 +253,7 @@ void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial0::advertInte
   }
 
   /* convert to hex char array */
-  HM11_SoftwareSerial0::iBeaconData_t iBeacon;
+  HM11::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
   iBeaconNameToIBeaconUUID(beaconName, &iBeacon);
   iBeacon.interv = interv;
@@ -265,13 +265,13 @@ void OXOcard::setupAsIBeacon(String beaconName, HM11_SoftwareSerial0::advertInte
  * \fn      setupAsIBeacon
  * \brief   setup the BLE module of the OXOcard as iBeacon
  *
- * \param   (uint)   iBeacon number (1... 65534)
- *          (struct) advertInterval
+ * \param   (uint) iBeacon number (1... 65534)
+ *          (enum) advertInterval
  * \return  -
  ============================================================== */
-void OXOcard::setupAsIBeacon(uint16_t beaconNr, HM11_SoftwareSerial0::advertInterval_t interv)
+void OXOcard::setupAsIBeacon(uint16_t beaconNr, HM11::advertInterval_t interv)
 {
-  HM11_SoftwareSerial0::iBeaconData_t iBeacon;
+  HM11::iBeaconData_t iBeacon;
   iBeacon.name = BLE_NAME;
   iBeacon.uuid = BLE_DEFAULT_UUID;
   iBeacon.marjor = BLE_DEFAULT_MARJOR;
@@ -299,7 +299,7 @@ int16_t OXOcard::findIBeacon(String beaconName)
     firstTime = false;
   }
 
-  static HM11_SoftwareSerial0::iBeaconData_t iBeacon;
+  static HM11::iBeaconData_t iBeacon;
   iBeaconNameToIBeaconUUID(beaconName, &iBeacon);
 
   DebugOXOcard_println(F("detectIBeacon..."));
@@ -336,7 +336,7 @@ int16_t OXOcard::findIBeacon(uint16_t beaconNr)
   static bool firstTime = true;
   int16_t txPower = 0;
 
-  static HM11_SoftwareSerial0::iBeaconData_t iBeacon;
+  static HM11::iBeaconData_t iBeacon;
   iBeacon.minor = beaconNr;              // minor you wish to search for
 
   if (firstTime)
@@ -530,7 +530,7 @@ inline bool OXOcard::getLEDBlue()
  *          iBeacon  iBeacon structure pointer (see struct in the HM11 header-file)
  * \return  -
  ============================================================== */
-void OXOcard::iBeaconNameToIBeaconUUID(String beaconName, HM11_SoftwareSerial0::iBeaconData_t *iBeacon)
+void OXOcard::iBeaconNameToIBeaconUUID(String beaconName, HM11::iBeaconData_t *iBeacon)
 {
   char hexCharArray[20*2];
   for (uint8_t i = 0; i < 20*2; i++) hexCharArray[i] = '1';  // init with '1' since the HM-11 doesn't allow '0'
