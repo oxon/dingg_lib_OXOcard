@@ -12,8 +12,8 @@
  -----------------------------------------------------------------------------*/
 
 /* Define to prevent recursive inclusion -----------------------*/
-#ifndef OXOCARD_RUNNER_H_
-#define OXOCARD_RUNNER_H_
+#ifndef _OXOCARD_RUNNER_H_
+#define _OXOCARD_RUNNER_H_
 
 /* Includes --------------------------------------------------- */
 #include "OXOcard.h"
@@ -41,7 +41,7 @@ void handleAutoTurnOff(unsigned int seconds = DEFAULT_AUTO_TURN_OFF) {
 }
 
 void resetOXOcard() {
-  ((void (*)())0x0)();  // jumpt to address 0x0
+  ((void (*)())0x0)();  // jumpt to address 0x00
 }
 
 /* ------------------------------------- */
@@ -82,27 +82,27 @@ void drawPixel(byte x, byte y, byte brightness=255) {
 /* ------------------------------------- */
 void drawRectangle(byte x, byte y, byte l, byte h, byte b=255) {
   globalOXOcard.matrix->drawRectangle(x,y,l,h,b);
-};
+}
 
 /* ------------------------------------- */
 void drawFilledRectangle(byte x, byte y, byte l, byte h, byte b=255) {
   globalOXOcard.matrix->drawFilledRectangle(x,y,l,h,b);
-};
+}
 
 /* ------------------------------------- */
 void drawLine(byte x0, byte y0, byte x1, byte y1, byte b=255) {
   globalOXOcard.matrix->drawLine(x0,y0,x1,y1,b);
-};
+}
 
 /* ------------------------------------- */
 void drawCircle(byte x0, byte y0, byte r, byte b=255) {
   globalOXOcard.matrix->drawCircle(x0,y0,r,b);
-};
+}
 
 /* ------------------------------------- */
 void drawFilledCircle(byte x0, byte y0, byte r, byte b=255) {
   globalOXOcard.matrix->drawFilledCircle(x0,y0,r,b);
-};
+}
 
 /* ------------------------------------- */
 void drawTriangle(byte x0, byte y0, byte x1, byte y1, byte x2, byte y2, byte b=255) {
@@ -168,14 +168,12 @@ int getXAcceleration() {
   return vector[0]*255;
 }
 
-/* ------------------------------------- */
 int getYAcceleration() {
   float vector[3];
   globalOXOcard.accel->getAccelerationVector(vector);
   return vector[1]*255;
 }
 
-/* ------------------------------------- */
 int getZAcceleration() {
   float vector[3];
   globalOXOcard.accel->getAccelerationVector(vector);
@@ -187,7 +185,6 @@ byte getOrientation() {
   return byte(globalOXOcard.accel->getOrientation());    // 1 = UP, 2 = DOWN, 3 = HORIZONTALLY, 4 = VERTICALLY
 }
 
-/* ------------------------------------- */
 bool isOrientationUp() {
   return byte(globalOXOcard.accel->getOrientation()) == MMA7660FC::UP;
 }
@@ -301,6 +298,7 @@ void playMelody(int tones[], int lengths[], int size, int pause = 100) {
   }
 }
 
+/* Timer functions -------------------------------------------- */
 void resetTimer() {
   millisSinceLastReset = millis();
 }
@@ -316,6 +314,7 @@ void checkIfSerialOn() {
   }
 }
 
+/* Print functions -------------------------------------------- */
 void print(const String &s) {
   checkIfSerialOn();
   Serial.print(s);

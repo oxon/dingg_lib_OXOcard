@@ -11,8 +11,8 @@
  -----------------------------------------------------------------------------*/
 
 /* Define to prevent recursive inclusion -----------------------*/
-#ifndef OXOCARD_H_
-#define OXOCARD_H_
+#ifndef _OXOCARD_H_
+#define _OXOCARD_H_
 
 /* Includes --------------------------------------------------- */
 #include <Arduino.h>
@@ -32,8 +32,8 @@
 #define DEFAULT_AUTO_TURN_OFF     120     // in seconds
 
 #define BAUDRATE_BLE              9600    // in baud
-#define BLE_NAME                  "OXOcard"
-#define BLE_DEFAULT_UUID          "4F584F63617264111111111111111111"  // "OXOcard"
+#define BLE_NAME                  F("OXOcard")
+#define BLE_DEFAULT_UUID          F("4F584F63617264111111111111111111")  // "OXOcard"
 #define BLE_DEFAULT_MARJOR        4
 
 /* Macros ----------------------------------------------------- */

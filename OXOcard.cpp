@@ -245,7 +245,7 @@ void OXOcard::setupAsIBeacon(String beaconName, HM11::advertInterval_t interv)
 {
   if (beaconName.length() > 20)
   {
-    DebugOXOcard_println("iBeacon name is too long! (max. 20 characters)");
+    DebugOXOcard_println(F("iBeacon name is too long! (max. 20 characters)"));
     beaconName = beaconName.substring(0, 20);
   }
 
@@ -627,5 +627,5 @@ ISR(INT0_vect)
   clearBit(EIMSK, INT1);  // BUTTON 2
   clearBit(EIMSK, INT0);  // BUTTON 3
   sleep_disable();
-  DebugOXOcard_println("wkUpInt3 occured, waking up...");
+  DebugOXOcard_println(F("wkUpInt3 occured, waking up..."));
 }
