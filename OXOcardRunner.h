@@ -1,41 +1,41 @@
-/**-----------------------------------------------------------------------------
- * \file    OXOcardRunner.h
- * \author  jh, tg
- * \date    xx.02.2017
- *
- * \version 1.0
- *
- * \brief   The OXOcardRunner is a set of simplified functions for
- *          programming the OXOcard
- *
- * @{
- -----------------------------------------------------------------------------*/
-
-/* Define to prevent recursive inclusion -----------------------*/
 #ifndef _OXOCARD_RUNNER_H_
 #define _OXOCARD_RUNNER_H_
+/*******************************************************************************
+* \file    OXOcardRunner.h
+********************************************************************************
+* \author  Jascha Haldemann jh@oxon.ch
+* \author  Thomas Garaio tg@oxon.ch
+* \date    01.02.2017
+* \version 1.0
+*
+* \brief   The OXOcardRunner is a set of simplified functions to programm
+*          the OXOcard
+*
+********************************************************************************
+* OXOcard
+*******************************************************************************/
 
-/* Includes --------------------------------------------------- */
+/* ============================== Global imports ============================ */
 #include "OXOcard.h"
 
-/* global variables ------------------------------------------- */
+/* ============================ Global variables ============================ */
 volatile bool serialOn = false;
 volatile unsigned long millisSinceLastReset = 0;
 
-/* Object instantiations -------------------------------------- */
+/* ====================== Global class instantiations ======================= */
 OXOcard globalOXOcard;
 
+/* ============================ Global functions ============================ */
 /* hook function from Arduino to allow 3rd party variant-specific initialization */
 void initVariant() {
   globalOXOcard.begin();
 }
 
-/* System functions ------------------------------------------- */
+/* System functions --------------------------------------------------------- */
 void turnOff(bool leftButton = false, bool middleButton = false, bool rightButton = false) {
    globalOXOcard.turnOff(leftButton, middleButton, rightButton);
 }
 
-/* ------------------------------------- */
 void handleAutoTurnOff(unsigned int seconds = DEFAULT_AUTO_TURN_OFF) {
   globalOXOcard.handleAutoTurnOff(seconds);
 }
@@ -44,77 +44,63 @@ void resetOXOcard() {
   ((void (*)())0x0)();  // jumpt to address 0x00
 }
 
-/* ------------------------------------- */
 bool isLeftButtonPressed() {
   return globalOXOcard.isLeftButtonPressed();
 }
 
-/* ------------------------------------- */
 bool isMiddleButtonPressed() {
   return globalOXOcard.isMiddleButtonPressed();
 }
 
-/* ------------------------------------- */
 bool isRightButtonPressed() {
   return globalOXOcard.isRightButtonPressed();
 }
 
-/* LED-Matrix functions --------------------------------------- */
+/* LED-Matrix functions ----------------------------------------------------- */
 void clearDisplay() {
    globalOXOcard.matrix->fillScreen(0);
 }
 
-/* ------------------------------------- */
 void turnDisplayOn() {
   globalOXOcard.matrix->fillScreen(255);
 }
 
-/* ------------------------------------- */
 void fillDisplay(byte brightness=255) {
   globalOXOcard.matrix->fillScreen(brightness);
 }
 
-/* ------------------------------------- */
 void drawPixel(byte x, byte y, byte brightness=255) {
   globalOXOcard.matrix->drawPixel(x,y,brightness);
 }
 
-/* ------------------------------------- */
 void drawRectangle(byte x, byte y, byte l, byte h, byte b=255) {
   globalOXOcard.matrix->drawRectangle(x,y,l,h,b);
 }
 
-/* ------------------------------------- */
 void drawFilledRectangle(byte x, byte y, byte l, byte h, byte b=255) {
   globalOXOcard.matrix->drawFilledRectangle(x,y,l,h,b);
 }
 
-/* ------------------------------------- */
 void drawLine(byte x0, byte y0, byte x1, byte y1, byte b=255) {
   globalOXOcard.matrix->drawLine(x0,y0,x1,y1,b);
 }
 
-/* ------------------------------------- */
 void drawCircle(byte x0, byte y0, byte r, byte b=255) {
   globalOXOcard.matrix->drawCircle(x0,y0,r,b);
 }
 
-/* ------------------------------------- */
 void drawFilledCircle(byte x0, byte y0, byte r, byte b=255) {
   globalOXOcard.matrix->drawFilledCircle(x0,y0,r,b);
 }
 
-/* ------------------------------------- */
 void drawTriangle(byte x0, byte y0, byte x1, byte y1, byte x2, byte y2, byte b=255) {
   globalOXOcard.matrix->drawTriangle(x0,y0,x1,y1,x2,y2,b);
 }
 
-/* ------------------------------------- */
 void drawFilledTriangle(byte x0, byte y0, byte x1, byte y1, byte x2, byte y2, byte b=255) {
   globalOXOcard.matrix->drawFilledTriangle(x0,y0,x1,y1,x2,y2,b);
 }
 
-/* ------------------------------------- */
 void drawImage(byte image[8], byte brightness=255) {
   for (byte y = 0; y <= 7; y++) {
     byte b = image[y];
@@ -126,7 +112,6 @@ void drawImage(byte image[8], byte brightness=255) {
   }
 }
 
-/* ------------------------------------- */
 void drawImage(byte b0,
                byte b1,
                byte b2,
@@ -140,28 +125,25 @@ void drawImage(byte b0,
   drawImage(image,brightness);
 }
 
-/* ------------------------------------- */
 void drawChar(byte x, byte y, char c, byte brightness=255) {
   globalOXOcard.matrix->drawChar(x,y,c,brightness);
 }
 
-/* ------------------------------------- */
 void drawDigit(byte x, byte y, byte digit, byte brightness=255) {
-  drawChar(x,y,48+(digit%10),brightness);
+  drawChar(x,y,'0'+(digit%10),brightness);
 }
 
-/* ------------------------------------- */
 void drawNumber(byte number, byte brightness=255) {
   if (number > 99) {
     drawChar(0,1,'?',brightness);
     drawChar(5,1,'?',brightness);
   } else {
-    drawChar(0,1,48+(number/10),brightness);
-    drawChar(5,1,48+(number%10),brightness);
+    drawChar(0,1,'0'+(number/10),brightness);
+    drawChar(5,1,'0'+(number%10),brightness);
   }
 }
 
-/* Accelerometer functions ------------------------------------ */
+/* Accelerometer functions -------------------------------------------------- */
 int getXAcceleration() {
   float vector[3];
   globalOXOcard.accel->getAccelerationVector(vector);
@@ -180,7 +162,6 @@ int getZAcceleration() {
   return vector[2]*255;
 }
 
-/* ------------------------------------- */
 byte getOrientation() {
   return byte(globalOXOcard.accel->getOrientation());    // 1 = UP, 2 = DOWN, 3 = HORIZONTALLY, 4 = VERTICALLY
 }
@@ -201,7 +182,7 @@ bool isOrientationVertically() {
   return byte(globalOXOcard.accel->getOrientation()) == MMA7660FC::VERTICALLY;
 }
 
-/* BLE functions ---------------------------------------------- */
+/* BLE functions ------------------------------------------------------------ */
 void setupAsIBeacon(String beaconName, HM11::advertInterval_t interv = HM11::INTERV_550MS) {      // max. 20 characters
   globalOXOcard.setupAsIBeacon(beaconName, interv);
 }
@@ -210,7 +191,6 @@ void setupAsIBeacon(unsigned int beaconNr, HM11::advertInterval_t interv = HM11:
   globalOXOcard.setupAsIBeacon(beaconNr, interv);
 }
 
-/* ------------------------------------- */
 int findIBeacon(String beaconName) {
   return globalOXOcard.findIBeacon(beaconName);
 }
@@ -219,7 +199,6 @@ int findIBeacon(unsigned int beaconNr) {
   return globalOXOcard.findIBeacon(beaconNr);
 }
 
-/* ------------------------------------- */
 void setBluetoothTxPower(byte txPower) {    // 0 = -23dbm, 1 = -6dbm, 2 = 0dbm, 3 = 6dbm
   globalOXOcard.ble->setTxPower(HM11::txPower_t(txPower));
 }
@@ -228,7 +207,6 @@ byte getBluetoothTxPower() {                // 0 = -23dbm, 1 = -6dbm, 2 = 0dbm, 
   return byte(globalOXOcard.ble->getTxPower());
 }
 
-/* ------------------------------------- */
 String getBluetoothMacAddress() {
   return globalOXOcard.ble->getMacAddress();
 }
@@ -279,7 +257,7 @@ void bluetoothHandshaking(bool master) {
   if (!(globalOXOcard.ble->handshaking(master))) resetOXOcard();
 }
 
-/* Tone functions --------------------------------------------- */
+/* Tone functions ----------------------------------------------------------- */
 void tone(int frequency, int duration = 0) {
   if (frequency < 0) return;
   tone(PIN_NR_PIEZO, (unsigned int)(frequency), (unsigned long)(duration));
@@ -298,7 +276,7 @@ void playMelody(int tones[], int lengths[], int size, int pause = 100) {
   }
 }
 
-/* Timer functions -------------------------------------------- */
+/* Timer functions ---------------------------------------------------------- */
 void resetTimer() {
   millisSinceLastReset = millis();
 }
@@ -314,7 +292,7 @@ void checkIfSerialOn() {
   }
 }
 
-/* Print functions -------------------------------------------- */
+/* Print functions ---------------------------------------------------------- */
 void print(const String &s) {
   checkIfSerialOn();
   Serial.print(s);

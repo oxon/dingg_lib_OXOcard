@@ -1,13 +1,20 @@
-/* Define to prevent recursive inclusion -----------------------*/
-#ifndef GLOBALS_H_
-#define GLOBALS_H_
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
+/*******************************************************************************
+* \file    glboals.h
+********************************************************************************
+* \author  Jascha Haldemann jh@oxon.ch
+* \date    01.02.2017
+* \version 1.0
+*
+* \brief   Global defines and macros
+*
+********************************************************************************
+* OXOcard
+*******************************************************************************/
 
-/* General defines -------------------------------------------- */
-#ifndef FOREVER
-  #define FOREVER            ;;
-#endif
-
-/* PIN definitions -------------------------------------------- */
+/* ==================== Global module constant declaration ================== */
+/* Pin definitions */
 // PINx  -> to read input
 // PORTx -> to set output
 #define PB7_              7  // PB7
@@ -82,7 +89,7 @@
 #define P_RXD             PORTD
 #define PIN_RXD           PIND
 
-/* Makros ----------------------------------------------------- */
+/* ========================= Global macro declaration ======================= */
 /* port manipulation makros */
 #ifndef clearBit
 #define clearBit(reg, bit) (_SFR_BYTE(reg) &= ~_BV(bit))

@@ -1,32 +1,32 @@
-/**-----------------------------------------------------------------------------
- * \file    OXOcard.h
- * \author  jh, tg
- * \date    xx.02.2017
- *
- * \version 1.0
- *
- * \brief   The OXOcard is a board for kids to learn programming with Arduino
- *
- * @{
- -----------------------------------------------------------------------------*/
-
-/* Define to prevent recursive inclusion -----------------------*/
 #ifndef _OXOCARD_H_
 #define _OXOCARD_H_
+/*******************************************************************************
+* \file    OXOcard.h
+********************************************************************************
+* \author  Jascha Haldemann jh@oxon.ch
+* \author  Thomas Garaio tg@oxon.ch
+* \date    01.02.2017
+* \version 1.0
+*
+* \brief   The OXOcard is a board to learn programming with Arduino
+*
+********************************************************************************
+* OXOcard
+*******************************************************************************/
 
-/* Includes --------------------------------------------------- */
+/* ============================== Global imports ============================ */
 #include <Arduino.h>
 #include <avr/sleep.h>
 #include <Wire.h>
-#include <SoftwareSerial0.h>
 #include <MMA7660FC.h>
 #include <IS31FL3731.h>
+#include <SoftwareSerial0.h>
 #include <HM11_SoftwareSerial0.h>
 #include "globals.h"
 #include "pitches.h"
 
-/* Defines -----------------------------------------------------*/
-// #define DEBUG_OXOCARD  // define to activate Debug prints
+/* ==================== Global module constant declaration ================== */
+// #define DEBUG_OXOCARD                     // define to activate Debug prints
 #define DEBUG_BAUDRATE_OXOCARD    115200
 
 #define DEFAULT_AUTO_TURN_OFF     120     // in seconds
@@ -36,32 +36,23 @@
 #define BLE_DEFAULT_UUID          F("4F584F63617264111111111111111111")  // "OXOcard"
 #define BLE_DEFAULT_MARJOR        4
 
-/* Macros ----------------------------------------------------- */
-#ifdef DEBUG_OXOCARD
-  #define DebugOXOcard_begin(...)     Serial.begin(__VA_ARGS__)
-  #define DebugOXOcard_print(...)     Serial.print(__VA_ARGS__)
-  #define DebugOXOcard_println(...)   Serial.println(__VA_ARGS__)
-#else
-  #define DebugOXOcard_begin(...)
-  #define DebugOXOcard_print(...)
-  #define DebugOXOcard_println(...)
-#endif
+/* ========================= Global macro declaration ======================= */
 
-/* Class ------------------------------------------------------ */
+/* ============================ Class declaration =========================== */
 class OXOcard
 {
 public:
-  /* constructor(s) & deconstructor */
+  /* Public member data */
+  MMA7660FC *accel;
+  IS31FL3731 *matrix;
+  SoftwareSerial0 *bleSerial;
+  HM11_SoftwareSerial0 *ble;
+
+  /* Constructor(s) and  Destructor */
   OXOcard() {};
   ~OXOcard() {};
 
-  /* public enumerations */
-  //...
-
-  /* public typedefs */
-  //...
-
-  /* public methods */
+  /* Public member functions */
   void begin();
   void turnOff(bool leftButton = false, bool middleButton = false, bool rightButton = false);
   void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF);
@@ -74,29 +65,15 @@ public:
   int16_t findIBeacon(String beaconName);
   int16_t findIBeacon(uint16_t beaconNr);
 
-  /* public members */
-  MMA7660FC *accel;
-  IS31FL3731 *matrix;
-  SoftwareSerial0 *bleSerial;
-  HM11_SoftwareSerial0 *ble;
-
 private:
-  /* attributes */
-  //...
-
-  /* private constants (static) */
-  //...
-
-  /* private variables */
-  //...
-
-  /* private methods */
+  /* Private member functions */
   void initPins();
   void disableUnusedCpuFunctions();
-  void initTimerIRQ(uint8_t timer_nr, uint16_t prescaler, uint16_t divisor);
-  inline bool getLEDBlue();
-  void iBeaconNameToIBeaconUUID(String beaconName, HM11::iBeaconData_t *iBeacon);
+  void initTimerIRQ(uint8_t timerNr, uint16_t prescaler, uint16_t divisor);
+  inline bool getLEDBlue() {return !getBit(PIN_LED_BLUE, LED_BLUE);}
 
+  /* Private class functions (static) */
+  static void iBeaconNameToIBeaconUUID(String beaconName, HM11::iBeaconData_t *iBeacon);
 };
 
 #endif
