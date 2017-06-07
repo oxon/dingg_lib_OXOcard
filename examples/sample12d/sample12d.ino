@@ -10,25 +10,27 @@ byte level = 1;
 byte old_level = 0;
 
 void setup() {
-  clearDisplay();
+
 }
 
 // *************************************
 
 byte accel_value = 50;
 
-byte levels[] = {  5, 100,
-                   10, 80,
-                   15, 60,
-                   20, 40
-                };
+byte levels[] = {
+  5, 100,
+  10, 80,
+  15, 60,
+  20, 40,
+  25, 30
+};
 
 void backgroundTicker() {
   tone(1000, 50);
 }
 
 void drawIntro() {
- clearDisplay();
+  clearDisplay();
   drawImage(0b11100111,
             0b10000101,
             0b10100101,
@@ -52,7 +54,7 @@ void drawIntro() {
 }
 
 void drawGameOver() {
- for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 1000; i++) {
     byte x = random(8);
     byte y = random(4);
     byte b = random(255);
@@ -110,18 +112,19 @@ void newMeteor() {
 }
 
 void loop() {
-
-  handleAutoTurnOff(120);
-
   if (stopped) {
+    handleAutoTurnOff(10, true, true, true);
+    resetTimer();
     if (isMiddleButtonPressed()) {
       stopped = false;
-      resetTimer();
-    } else {
-      resetTimer();
+    }
+    else {
       drawIntro();
       return;
     }
+  }
+  else {
+    resetAutoTurnOffCounter();
   }
 
   drawScene();
@@ -134,9 +137,7 @@ void loop() {
   if (ax > accel_value) onMoveLeft();
   if (ax < -accel_value) onMoveRight();
 
-  if ((ship_x == meteor_x || ship_x + 1 == meteor_x)
-      && ship_y == meteor_y) {
-
+  if ((ship_x == meteor_x || ship_x + 1 == meteor_x) && ship_y == meteor_y) {
     noTone();
     drawGameOver();
 
@@ -158,7 +159,8 @@ void loop() {
   if (isLeftButtonPressed()) {
     if (ship_x > 0) {
       ship_x = ship_x - 1;
-    } else {
+    }
+    else {
       ship_x = 0 ;
     }
   }
@@ -166,7 +168,8 @@ void loop() {
   if (isRightButtonPressed()) {
     if (ship_x < 6) {
       ship_x = ship_x + 1;
-    } else {
+    }
+    else {
       ship_x = 6;
     }
   }
@@ -178,15 +181,15 @@ void loop() {
 
   if (loop_counter < 10) {
     loop_counter = loop_counter + 1;
-  } else {
+  }
+  else {
     loop_counter = 0;
     backgroundTicker();
   }
 
   int seconds = getTimerSeconds();
-  int i = 0;
   bool delayed = false;
-  for (int i = 0; i < sizeof(levels) / 2; i++) {
+  for (byte i = 0; i < sizeof(levels)/2; i++) {
     if (!delayed && seconds <= levels[i * 2]) {
       delay(levels[(i * 2) + 1]);
       delayed = true;

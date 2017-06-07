@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 void loop() {
@@ -11,3 +11,4 @@ void loop() {
   delay(100);
   drawCircle(4,4,r,0);
 }
+

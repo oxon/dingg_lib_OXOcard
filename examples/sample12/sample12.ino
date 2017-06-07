@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 byte ship_x = 0;
@@ -11,15 +11,17 @@ byte meteor_y = 0;
 bool stopped = false;
 
 void loop() {
-  handleAutoTurnOff(120);
-
   if (stopped) {
+    handleAutoTurnOff(10);
     if (isMiddleButtonPressed()) {
       stopped = false;
-    } else {
-      
+    }
+    else {
       return;
     }
+  }
+  else {
+    resetAutoTurnOffCounter();
   }
 
   clearDisplay();
@@ -27,9 +29,7 @@ void loop() {
   drawPixel(ship_x, ship_y);
   drawPixel(ship_x + 1, ship_y);
 
-  if ((ship_x == meteor_x || ship_x + 1 == meteor_x) 
-      && ship_y == meteor_y) {
-
+  if ((ship_x == meteor_x || ship_x + 1 == meteor_x) && ship_y == meteor_y) {
     drawRectangle(0, 0, 8, 8, 255);
     tone(100, 1000);
     ship_x = 0;
@@ -40,7 +40,8 @@ void loop() {
   if (isLeftButtonPressed()) {
     if (ship_x > 0) {
       ship_x = ship_x - 1;
-    } else {
+    }
+    else {
       ship_x = 0 ;
     }
   }
@@ -48,7 +49,8 @@ void loop() {
   if (isRightButtonPressed()) {
     if (ship_x < 6) {
       ship_x = ship_x + 1;
-    } else {
+    }
+    else {
       ship_x = 6;
     }
   }
@@ -59,6 +61,6 @@ void loop() {
     meteor_y = 0;
   }
 
-  
   delay(50);
 }
+

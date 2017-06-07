@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 void loop() {
@@ -28,3 +28,4 @@ void loop() {
     clearDisplay();
   }
 }
+

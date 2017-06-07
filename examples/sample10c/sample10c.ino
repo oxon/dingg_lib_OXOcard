@@ -1,6 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
+
 }
 
 void loop() {
@@ -8,6 +9,7 @@ void loop() {
 
   print("x = ");
   println(x);
-  
+
   delay(200);  
 }
+

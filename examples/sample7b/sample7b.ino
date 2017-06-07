@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 byte a;
@@ -13,3 +13,4 @@ void loop() {
 
   drawNumber(5+a*b/2);
 }
+

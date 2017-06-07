@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 byte ship_x = 0;
@@ -12,17 +12,19 @@ bool stopped = true;
 byte loop_counter = 0;
 
 void loop() {
-  handleAutoTurnOff(120);
-
   if (stopped) {
+    handleAutoTurnOff(10, true, true, true);
+    resetTimer();
     if (isMiddleButtonPressed()) {
       stopped = false;
-      resetTimer();
-    } else {
-      resetTimer();
+    }
+    else {
       drawIntro();
       return;
     }
+  }
+  else {
+    resetAutoTurnOffCounter();
   }
 
   clearDisplay();
@@ -30,9 +32,7 @@ void loop() {
   drawPixel(ship_x, ship_y);
   drawPixel(ship_x + 1, ship_y);
 
-  if ((ship_x == meteor_x || ship_x + 1 == meteor_x)
-      && ship_y == meteor_y) {
-
+  if ((ship_x == meteor_x || ship_x + 1 == meteor_x) && ship_y == meteor_y) {
     noTone();
     drawGameOver();
 
@@ -44,7 +44,8 @@ void loop() {
   if (isLeftButtonPressed()) {
     if (ship_x > 0) {
       ship_x = ship_x - 1;
-    } else {
+    }
+    else {
       ship_x = 0 ;
     }
   }
@@ -52,7 +53,8 @@ void loop() {
   if (isRightButtonPressed()) {
     if (ship_x < 6) {
       ship_x = ship_x + 1;
-    } else {
+    }
+    else {
       ship_x = 6;
     }
   }
@@ -65,7 +67,8 @@ void loop() {
 
   if (loop_counter < 10) {
     loop_counter = loop_counter + 1;
-  } else {
+  }
+  else {
     loop_counter = 0;
     tone(1000, 50);
   }
@@ -73,12 +76,13 @@ void loop() {
   int seconds = getTimerSeconds();
   if (seconds < 5) {
     delay(50);
-  } else if (seconds < 10) {
+  }
+  else if (seconds < 10) {
     delay(40);
-  } else {
+  }
+  else {
     delay(30);
   }
-
 }
 
 void drawIntro() {
@@ -102,16 +106,16 @@ void drawIntro() {
             0b00111100,
             0b00011000,
             80);
-   delay(300);
+  delay(300);
 }
 
 void drawGameOver() {
   for (int i = 0;i<1000;i++) {
-     byte x = random(8);
-     byte y = random(4);
-     byte b = random(255);
-     drawPixel(x,4+y,b);
-     tone(random(200));
+    byte x = random(8);
+    byte y = random(4);
+    byte b = random(255);
+    drawPixel(x,4+y,b);
+    tone(random(200));
   }
   noTone();
 }

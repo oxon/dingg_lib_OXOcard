@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 byte a;
@@ -17,3 +17,4 @@ void loop() {
     a = 0;
   }
 }
+

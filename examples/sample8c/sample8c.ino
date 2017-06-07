@@ -1,7 +1,7 @@
 #include "OXOcardRunner.h"
 
 void setup() {
-  clearDisplay();
+
 }
 
 void loop() {
@@ -10,3 +10,4 @@ void loop() {
   byte b = random(255);
   drawPixel(x,y,b);
 }
+

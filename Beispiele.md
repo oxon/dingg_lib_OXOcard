@@ -23,7 +23,7 @@ sample10b: liegender und stehender Smiley
 sample10c: Beschleunigung und serieller Monitor
 sample10d: Balken beim seitlichen Kippen
 sample10e: Balken beim Neigen 
-sample11a: BLE sender
+sample11:  BLE sender
 sample11b: BLE empfänger
 sample11c: BLE empfänger mit Funktion
 sample12:  Meteor-Game einfach
