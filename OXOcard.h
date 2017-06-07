@@ -56,6 +56,7 @@ public:
   void begin();
   void turnOff(bool leftButton = false, bool middleButton = false, bool rightButton = false);
   void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF, bool leftButton = false, bool middleButton = false, bool rightButton = false);
+  void resetAutoTurnOffCounter();
   bool isLeftButtonPressed();
   bool isMiddleButtonPressed();
   bool isRightButtonPressed();

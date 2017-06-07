@@ -193,7 +193,7 @@ volatile bool goingToTurnOff = false;
     if (seconds < autoTurnOffAfter)
     {
       /* counter has been changed -> reset the interrupt counter */
-      autoTurnOffCnt = 0;
+      resetAutoTurnOffCounter();
     }
     autoTurnOffAfter = seconds;
 
@@ -202,6 +202,15 @@ volatile bool goingToTurnOff = false;
       goingToTurnOff = false;
       turnOff(leftButton, middleButton, rightButton);
     }
+  }
+
+/** -------------------------------------------------------------------------
+  * \fn     resetAutoTurnOffCounter
+  * \brief  resets the auto turn off counter
+  --------------------------------------------------------------------------- */
+  void OXOcard::resetAutoTurnOffCounter()
+  {
+    autoTurnOffCnt = 0;
   }
 
 /** -------------------------------------------------------------------------
@@ -215,7 +224,7 @@ volatile bool goingToTurnOff = false;
     bool pressed = false;
     if (button1Pressed)
     {
-      autoTurnOffCnt = 0; // prevent autoturnoff after an action
+      resetAutoTurnOffCounter(); // prevent autoturnoff after an action
       pressed = true;
     }
     return pressed;
@@ -232,7 +241,7 @@ volatile bool goingToTurnOff = false;
     bool pressed = false;
     if (button2Pressed)
     {
-      autoTurnOffCnt = 0; // prevent autoturnoff after an action
+      resetAutoTurnOffCounter(); // prevent autoturnoff after an action
       pressed = true;
     }
     return pressed;
@@ -249,7 +258,7 @@ volatile bool goingToTurnOff = false;
     bool pressed = false;
     if (button3Pressed)
     {
-      autoTurnOffCnt = 0; // prevent autoturnoff after an action
+      resetAutoTurnOffCounter(); // prevent autoturnoff after an action
       pressed = true;
     }
     return pressed;

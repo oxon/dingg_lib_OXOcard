@@ -40,6 +40,10 @@ void handleAutoTurnOff(unsigned int seconds = DEFAULT_AUTO_TURN_OFF, bool leftBu
   globalOXOcard.handleAutoTurnOff(seconds, leftButton, middleButton, rightButton);
 }
 
+void resetAutoTurnOffCounter() {
+  globalOXOcard.resetAutoTurnOffCounter();
+}
+
 void resetOXOcard() {
   ((void (*)())0x0)();  // jumpt to address 0x00
 }

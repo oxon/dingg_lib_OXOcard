@@ -16,6 +16,7 @@ OXOcard				KEYWORD1
 begin				KEYWORD2
 turnOff			KEYWORD2
 handleAutoTurnOff		KEYWORD2
+resetAutoTurnOffCounter	KEYWORD2
 isLeftButtonPressed		KEYWORD2
 isMiddleButtonPressed		KEYWORD2
 isRightButtonPressed		KEYWORD2
