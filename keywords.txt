@@ -33,6 +33,7 @@ clearDisplay			KEYWORD2
 turnDisplayOn			KEYWORD2
 fillDisplay			KEYWORD2
 drawPixel			KEYWORD2
+clearPixel			KEYWORD2
 drawRectangle			KEYWORD2
 drawFilledRectangle		KEYWORD2
 drawLine			KEYWORD2

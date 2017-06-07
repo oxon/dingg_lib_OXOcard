@@ -73,6 +73,10 @@ void drawPixel(byte x, byte y, byte brightness=255) {
   globalOXOcard.matrix->drawPixel(x,y,brightness);
 }
 
+void clearPixel(byte x, byte y) {
+  globalOXOcard.matrix->drawPixel(x,y,0);
+}
+
 void drawRectangle(byte x, byte y, byte l, byte h, byte b=255) {
   globalOXOcard.matrix->drawRectangle(x,y,l,h,b);
 }
