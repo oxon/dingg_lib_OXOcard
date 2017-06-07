@@ -55,7 +55,7 @@ public:
   /* Public member functions */
   void begin();
   void turnOff(bool leftButton = false, bool middleButton = false, bool rightButton = false);
-  void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF);
+  void handleAutoTurnOff(uint16_t seconds = DEFAULT_AUTO_TURN_OFF, bool leftButton = false, bool middleButton = false, bool rightButton = false);
   bool isLeftButtonPressed();
   bool isMiddleButtonPressed();
   bool isRightButtonPressed();

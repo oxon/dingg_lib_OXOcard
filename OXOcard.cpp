@@ -182,10 +182,13 @@ volatile bool goingToTurnOff = false;
   *
   * \requ   turnOff()
   *
-  * \param  seconds   time in s
+  * \param  seconds       time in s
+  * \param  leftButton    enable wake-up by the left button
+  * \param  middleButton  enable wake-up by the middle button
+  * \param  rightButton   enable wake-up by the right button
   * \return None
   --------------------------------------------------------------------------- */
-  void OXOcard::handleAutoTurnOff(uint16_t seconds)
+  void OXOcard::handleAutoTurnOff(uint16_t seconds, bool leftButton, bool middleButton, bool rightButton)
   {
     if (seconds < autoTurnOffAfter)
     {
@@ -197,7 +200,7 @@ volatile bool goingToTurnOff = false;
     if (goingToTurnOff)
     {
       goingToTurnOff = false;
-      turnOff();
+      turnOff(leftButton, middleButton, rightButton);
     }
   }
 

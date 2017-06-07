@@ -36,8 +36,8 @@ void turnOff(bool leftButton = false, bool middleButton = false, bool rightButto
    globalOXOcard.turnOff(leftButton, middleButton, rightButton);
 }
 
-void handleAutoTurnOff(unsigned int seconds = DEFAULT_AUTO_TURN_OFF) {
-  globalOXOcard.handleAutoTurnOff(seconds);
+void handleAutoTurnOff(unsigned int seconds = DEFAULT_AUTO_TURN_OFF, bool leftButton = false, bool middleButton = false, bool rightButton = false) {
+  globalOXOcard.handleAutoTurnOff(seconds, leftButton, middleButton, rightButton);
 }
 
 void resetOXOcard() {
