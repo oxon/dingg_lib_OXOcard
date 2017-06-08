@@ -8,10 +8,10 @@ Eine ausführliche Installationsanleitung findest du auf unserer [Homepage][Inst
 In dieser wird primär beschrieben, wie du die OXOcard mittels _Arduino Boards Manager_ deinen verfügbaren Boards hinzufügen kannst.
 
 Möchtest du anschliessend einzelne Code-Teile der OXOcard anpassen, so kannst du die entsprechende Bibliothek (Library) von dieser oder nachfolgend beschriebenen Github-Seiten herunterladen und in deinen _Arduino/libraries_ Ordner verschieben.
-Sobald nämlich die files in deinem persönlichen _Arduino/libraries_ Ordner gefunden werden, wird dasjenige im OXOcard-Board-Packet ignoriert.
+Sobald die Files in deinem persönlichen _Arduino/libraries_ Ordner gefunden werden, werden diejenigen im OXOcard-Board-Packet ignoriert.
 
 ## Libraries
-Die OXOcard besteht aus verschiedenen HW-Modulen, die mit nachfolgenden selbst entwickelten Bibliotheken angesteuert werden können:
+Die OXOcard besteht aus verschiedenen HW-Modulen, die mit nachfolgenden durch OXON entwickelten Bibliotheken angesteuert werden können:
 * [Beschleunigungssensor][Accelerometer]
 * [Bluetooth-Modul][BLE]
 * [LED-Matrix][LED-Matrix]
@@ -39,7 +39,9 @@ myOXOcard.ble->...      // siehe Bluetooth-Modul-Funktionen
 myOXOcard.matrix->...   // siehe LED-Matrix-Treiber-Funktionen
 ```
 
-Viel Spass beim programmieren und lernen!
+Bibliotheken, die so in ein Arduino-Projekt eingebunden werden, werden beim Upload automatisch mit kompiliert und auf die OXOcard hochgeladen.
+
+Viel Spass beim Programmieren und Lernen!
 
 [![Hello][OXOcard_gif]][OXOcard]
 
