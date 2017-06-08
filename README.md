@@ -11,7 +11,7 @@ Möchtest du anschliessend einzelne Code-Teile der OXOcard anpassen, so kannst d
 Sobald die Files in deinem persönlichen _Arduino/libraries_ Ordner gefunden werden, werden diejenigen im OXOcard-Board-Packet ignoriert.
 
 ## Libraries
-Die OXOcard besteht aus verschiedenen HW-Modulen, die mit nachfolgenden durch OXON entwickelten Bibliotheken angesteuert werden können:
+Die OXOcard besteht aus verschiedenen Hardware-Modulen, die mit nachfolgenden durch OXON entwickelten Bibliotheken angesteuert werden können:
 * [Beschleunigungssensor][Accelerometer]
 * [Bluetooth-Modul][BLE]
 * [LED-Matrix][LED-Matrix]
@@ -28,7 +28,7 @@ Die einfachste Art die OXOcard nach der Installation anzusteuern, ist es das [OX
 ```
 Dieses stellt einfache Funktionen zur Verfügung, die ebenfalls auf unserer [Homepage][Referenzen] näher beschrieben sind.
 
-Eine Alternative für Fortgeschrittene ist es, das [OXOcard.h-File][OXOcard.h] einzubinden und selbst ein OXOcard Objekt zu erzeugen. Dieses kann anschlissend verwendet werden um die einzelnen HW-Module direkt anzusteuern:
+Eine Alternative für Fortgeschrittene ist es, das [OXOcard.h-File][OXOcard.h] einzubinden und selbst ein OXOcard Objekt zu erzeugen. Dieses kann anschlissend verwendet werden um die einzelnen Hardware-Module direkt anzusteuern:
 ```Arduino
 #include <OXOcard.h>
 
@@ -39,7 +39,7 @@ myOXOcard.ble->...      // siehe Bluetooth-Modul-Funktionen
 myOXOcard.matrix->...   // siehe LED-Matrix-Treiber-Funktionen
 ```
 
-Bibliotheken, die so in ein Arduino-Projekt eingebunden werden, werden beim Upload automatisch mit kompiliert und auf die OXOcard hochgeladen.
+Bibliotheken die so in ein Arduino-Projekt eingebunden werden, werden beim Upload automatisch mit kompiliert und auf die OXOcard hochgeladen.
 
 Viel Spass beim Programmieren und Lernen!
 
