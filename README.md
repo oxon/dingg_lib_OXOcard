@@ -61,6 +61,6 @@ This project is licensed under the terms of the [GNU Lesser General Public Licen
 [OXOcard_files]:https://github.com/oxon/dingg_lib_OXOcard
 [OXOcardRunner.h]:https://github.com/oxon/dingg_lib_OXOcard/blob/master/OXOcardRunner.h
 [OXOcard.h]:https://github.com/oxon/dingg_lib_OXOcard/blob/master/OXOcard.h
-[Referenzen]:http://www.oxocard.ch/referenzen/
+[Referenzen]:http://www.oxocard.ch/oxocard-befehle/
 [OXOcard_gif]:http://www.oxocard.ch/wp-content/uploads/2017/04/oxocard_animiert.gif
 [License]:https://github.com/oxon/dingg_lib_OXOcard/blob/master/LICENSE
