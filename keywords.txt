@@ -7,70 +7,70 @@
 #-------------------------------------------------
 # KEYWORD1: Classes, datatypes and C++ keywords
 #-------------------------------------------------
-OXOcard				KEYWORD1
+OXOcard	KEYWORD1
 
 #-------------------------------------------------
 # KEYWORD2: Methods and Functions
 #-------------------------------------------------
 #OXOcard:
-begin				KEYWORD2
-turnOff			KEYWORD2
-handleAutoTurnOff		KEYWORD2
+begin	KEYWORD2
+turnOff	KEYWORD2
+handleAutoTurnOff	KEYWORD2
 resetAutoTurnOffCounter	KEYWORD2
-isLeftButtonPressed		KEYWORD2
-isMiddleButtonPressed		KEYWORD2
-isRightButtonPressed		KEYWORD2
-setupAsIBeacon			KEYWORD2
-findIBeacon			KEYWORD2
-initPins			KEYWORD2
+isLeftButtonPressed	KEYWORD2
+isMiddleButtonPressed	KEYWORD2
+isRightButtonPressed	KEYWORD2
+setupAsIBeacon	KEYWORD2
+findIBeacon	KEYWORD2
+initPins	KEYWORD2
 disableUnusedCpuFunctions	KEYWORD2
-initTimerIRQ			KEYWORD2
-getLEDBlue			KEYWORD2
+initTimerIRQ	KEYWORD2
+getLEDBlue	KEYWORD2
 iBeaconNameToIBeaconUUID	KEYWORD2
 
 #OXOcardRunner:
-resetOXOcard			KEYWORD2
-clearDisplay			KEYWORD2
-turnDisplayOn			KEYWORD2
-fillDisplay			KEYWORD2
-drawPixel			KEYWORD2
-clearPixel			KEYWORD2
-drawRectangle			KEYWORD2
-drawFilledRectangle		KEYWORD2
-drawLine			KEYWORD2
-drawCircle			KEYWORD2
-drawFilledCircle		KEYWORD2
-drawTriangle			KEYWORD2
-drawFilledTriangle		KEYWORD2
-drawImage			KEYWORD2
-drawChar			KEYWORD2
-drawDigit			KEYWORD2
-drawNumber			KEYWORD2
-getXAcceleration		KEYWORD2
-getYAcceleration		KEYWORD2
-getZAcceleration		KEYWORD2
-getOrientation			KEYWORD2
-isOrientationUp		KEYWORD2
-isOrientationDown		KEYWORD2
+resetOXOcard	KEYWORD2
+clearDisplay	KEYWORD2
+turnDisplayOn	KEYWORD2
+fillDisplay	KEYWORD2
+drawPixel	KEYWORD2
+clearPixel	KEYWORD2
+drawRectangle	KEYWORD2
+drawFilledRectangle	KEYWORD2
+drawLine	KEYWORD2
+drawCircle	KEYWORD2
+drawFilledCircle	KEYWORD2
+drawTriangle	KEYWORD2
+drawFilledTriangle	KEYWORD2
+drawImage	KEYWORD2
+drawChar	KEYWORD2
+drawDigit	KEYWORD2
+drawNumber	KEYWORD2
+getXAcceleration	KEYWORD2
+getYAcceleration	KEYWORD2
+getZAcceleration	KEYWORD2
+getOrientation	KEYWORD2
+isOrientationUp	KEYWORD2
+isOrientationDown	KEYWORD2
 isOrientationHorizontally	KEYWORD2
 isOrientationVertically	KEYWORD2
-setupAsIBeacon			KEYWORD2
-findIBeacon			KEYWORD2
-setBluetoothTxPower		KEYWORD2
-getBluetoothTxPower		KEYWORD2
-getBluetoothMacAddress		KEYWORD2
+setupAsIBeacon	KEYWORD2
+findIBeacon	KEYWORD2
+setBluetoothTxPower	KEYWORD2
+getBluetoothTxPower	KEYWORD2
+getBluetoothMacAddress	KEYWORD2
 connectToBluetoothMacAddress	KEYWORD2
-bluetoothWrite			KEYWORD2
-bluetoothPrint			KEYWORD2
-bluetoothPrintln		KEYWORD2
-bluetoothRead			KEYWORD2
-bluetoothReadChar		KEYWORD2
-bluetoothAvailable		KEYWORD2
-bluetoothHandshaking		KEYWORD2
-playMelody			KEYWORD2
-resetTimer			KEYWORD2
-getTimerSeconds		KEYWORD2
-checkIfSerialOn		KEYWORD2
+bluetoothWrite	KEYWORD2
+bluetoothPrint	KEYWORD2
+bluetoothPrintln	KEYWORD2
+bluetoothRead	KEYWORD2
+bluetoothReadChar	KEYWORD2
+bluetoothAvailable	KEYWORD2
+bluetoothHandshaking	KEYWORD2
+playMelody	KEYWORD2
+resetTimer	KEYWORD2
+getTimerSeconds	KEYWORD2
+checkIfSerialOn	KEYWORD2
 
 #-------------------------------------------------
 # KEYWORD3: setup, loop and Serial keywords
